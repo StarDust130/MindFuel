@@ -10,7 +10,7 @@ app.use(json());
 
 
 app.get("/", (req, res) => {
-  res.send("Hello World");
+  res.send("Hello World From BABY BABU 🙃 😆");
 });
 
 app.listen(3001, () => {
