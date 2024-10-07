@@ -3,6 +3,7 @@ import cors from "cors";
 
 const app = express();
 
+//! Common Middleware
 app.use(
   cors({
     origin: process.env.CLIENT_URL,
@@ -12,6 +13,14 @@ app.use(
 );
 
 app.use(express.json());
+
+app.use((err, req, res, next) => {
+  console.log(err.stack);
+  res.status(500).json({
+    success: false,
+    message: err.message || "Something went wrong 😞",
+  });
+});
 
 //! Routes
 
