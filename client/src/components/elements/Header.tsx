@@ -1,13 +1,28 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import { Menu } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const Header = () => {
   return (
     <header>
       <div className="w-full flex h-16 items-center gap-8 px-6 lg:px-8">
+        {/* Adjust logo size based on screen size */}
         <Link href="/" aria-label="Home" className="block">
-          <Image src="/logo-no-bg.png" alt="logo" width={80} height={80} />
+          <Image
+            src="/logo-no-bg.png"
+            alt="logo"
+            width={80}
+            height={80}
+            className="w-16 h-16 sm:w-12 sm:h-12" // Smaller logo for small screens
+          />
         </Link>
 
         <div className="flex flex-1 items-center justify-end md:justify-between">
@@ -34,7 +49,7 @@ const Header = () => {
           </nav>
 
           <div className="flex items-center gap-4">
-            <div className="flex gap-4">
+            <div className="hidden md:flex gap-4">
               <Link href="/login">
                 <Button>Login</Button>
               </Link>
@@ -44,23 +59,60 @@ const Header = () => {
               </Link>
             </div>
 
-            <button className="block p-2.5 md:hidden hover:bg-gray-100 rounded">
-              <span className="sr-only">Toggle menu</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="size-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            </button>
+            {/* Show Login and Menu for small screens */}
+            <div className="md:hidden flex items-center gap-4">
+              <Link href="/login">
+                <Button size="sm">Login</Button>
+              </Link>
+
+              {/* Sheet for small screens with navigation links */}
+              <Sheet>
+                <SheetTrigger>
+                  <Button size={"sm"} variant={"ghost"} className="p-2.5 rounded">
+                    <Menu />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right">
+                  <SheetHeader>
+                    <SheetTitle>Menu</SheetTitle>
+                  </SheetHeader>
+
+                  {/* Navigation links for the sheet */}
+                  <nav className="mt-4">
+                    <ul className="flex flex-col gap-4 text-gray-700 dark:text-gray-300">
+                      {[
+                        "About",
+                        "Careers",
+                        "History",
+                        "Services",
+                        "Projects",
+                        "Blog",
+                      ].map((item) => (
+                        <li key={item}>
+                          <Link href="#" className="text-lg">
+                            {item}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </nav>
+
+                  {/* Optional: Add other actions (login, sign up) in the sheet */}
+                  <div className="mt-8">
+                    <Link href="/login">
+                      <Button size="sm" className="w-full mb-4">
+                        Login
+                      </Button>
+                    </Link>
+                    <Link href="/sign-up">
+                      <Button variant="ghost" size="sm" className="w-full">
+                        Sign Up
+                      </Button>
+                    </Link>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
           </div>
         </div>
       </div>
