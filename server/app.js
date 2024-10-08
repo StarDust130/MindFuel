@@ -28,10 +28,12 @@ app.use((err, req, res, next) => {
 // import healthCheckRouter from "./routes/healthCheck.routes.js";
 
 app.get("/", (req, res) => {
-  res.send("Hello World");
+  res.send("Hello World from babu 😂");
 });
 
 //! All Routes
 // app.use("/api/v1/health-check", healthCheckRouter);
 
 export { app };
+
+

@@ -7,3 +7,5 @@ export default async function Home() {
 
   return <div>{data}</div>;
 }
+
+

@@ -1,4 +1,3 @@
-
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
@@ -12,7 +11,7 @@ export const description =
 
 function Signup() {
   return (
-    <div className="w-full lg:grid  lg:grid-cols-2 ">
+    <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[900px] mt-3">
       <div className="flex items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
@@ -51,31 +50,31 @@ function Signup() {
             </Button>
           </div>
           <div className="mt-4 text-center text-sm">
-            Already  have an account?{" "}
+            Already have an account?{" "}
             <Link href="/login" className="underline">
               Login
             </Link>
           </div>
         </div>
       </div>
-      <div className="hidden bg-muted lg:block">
+      <div className="hidden bg-muted lg:block mr-1">
         <Image
           src="/anime-girl-2.jpg"
           width="1920"
           height="1080"
-          className="h-full w-full object-cover rounded-2xl dark:brightness-[1.2] "
+          className="h-full w-full object-cover rounded-2xl dark:brightness-[2.2] "
           alt="anime-girl"
         />
       </div>
 
-      <Button
-        variant={"ghost"}
-        className="absolute top-2 left-0 md:top-5 md:left-5"
-      >
-        <Link href="/">
+      <Link href="/">
+        <Button
+          variant={"ghost"}
+          className="absolute top-2 left-0 md:top-5 md:left-5"
+        >
           <ChevronLeft />
-        </Link>
-      </Button>
+        </Button>
+      </Link>
     </div>
   );
 }

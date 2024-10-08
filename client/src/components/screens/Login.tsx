@@ -11,7 +11,7 @@ export const description =
 
 function Login() {
   return (
-    <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[700px] mt-1">
+    <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[900px] mt-3">
       <div className="flex items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
@@ -67,11 +67,14 @@ function Login() {
         />
       </div>
 
-      <Button variant={"ghost"} className="absolute top-2 left-0 md:top-5 md:left-5">
-        <Link href="/">
+      <Link href="/">
+        <Button
+          variant={"ghost"}
+          className="absolute top-2 left-0 md:top-5 md:left-5"
+        >
           <ChevronLeft />
-        </Link>
-      </Button>
+        </Button>
+      </Link>
     </div>
   );
 }
