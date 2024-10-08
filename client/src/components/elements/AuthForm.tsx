@@ -37,7 +37,6 @@ const AuthForm = ({
   data,
   setData,
 }: AuthFormProps) => {
-    
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setData((prevData) => ({ ...prevData, [id]: value }));
@@ -65,7 +64,7 @@ const AuthForm = ({
                   type="username"
                   value={data.username}
                   onChange={handleChange}
-                  placeholder="m@example.com"
+                  placeholder="Satoru Gojo"
                   required
                 />
               </div>
@@ -77,7 +76,7 @@ const AuthForm = ({
                 type="email"
                 value={data.email}
                 onChange={handleChange}
-                placeholder="m@example.com"
+                placeholder="gojo@satoru.jjk"
                 required
               />
             </div>
@@ -117,7 +116,7 @@ const AuthForm = ({
           </div>
         </div>
       </div>
-      <div className="hidden bg-muted lg:block mr-1  h-[95vh] ">
+      <div className="hidden bg-muted lg:block mr-1 rounded-2xl  h-[95vh] ">
         <Image
           src={image}
           width="1920"
