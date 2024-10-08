@@ -68,13 +68,7 @@ const Header = () => {
               {/* Sheet for small screens with navigation links */}
               <Sheet>
                 <SheetTrigger>
-                  <Button
-                    size={"sm"}
-                    variant={"ghost"}
-                    className="p-2.5 rounded"
-                  >
-                    <Menu />
-                  </Button>
+                  <Menu />
                 </SheetTrigger>
                 <SheetContent side="right">
                   <SheetHeader>

@@ -1,6 +1,12 @@
+"use client";
+import { useState } from "react";
 import AuthForm from "../elements/AuthForm";
 
 function Login() {
+  const [data, setData] = useState({ email: "", password: "" });
+
+  console.log("Login:" , data);
+  
   return (
     <AuthForm
       title="Login"
@@ -11,6 +17,8 @@ function Login() {
       footerLinkText="Sign up"
       image="/anime-girl-1.jpg"
       type="login"
+      data={data}
+      setData={setData}
     />
   );
 }

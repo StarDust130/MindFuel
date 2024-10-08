@@ -6,16 +6,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+type AuthData = {
+  email: string;
+  password: string;
+  username?: string;
+};
+
 type AuthFormProps = {
   title: string;
   description: string;
   submitText: string;
-
   footerText: string;
   footerLink: string;
   footerLinkText: string;
   image: string;
   type: "login" | "signup";
+  data: AuthData;
+  setData: React.Dispatch<React.SetStateAction<AuthData>>;
 };
 
 const AuthForm = ({
@@ -27,7 +34,20 @@ const AuthForm = ({
   footerLinkText,
   image,
   type,
+  data,
+  setData,
 }: AuthFormProps) => {
+    
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setData((prevData) => ({ ...prevData, [id]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle form submission (e.g., API call)
+  };
+
   return (
     <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[700px] mt-3">
       <div className="flex items-center justify-center py-12">
@@ -43,6 +63,8 @@ const AuthForm = ({
                 <Input
                   id="username"
                   type="username"
+                  value={data.username}
+                  onChange={handleChange}
                   placeholder="m@example.com"
                   required
                 />
@@ -53,6 +75,8 @@ const AuthForm = ({
               <Input
                 id="email"
                 type="email"
+                value={data.email}
+                onChange={handleChange}
                 placeholder="m@example.com"
                 required
               />
@@ -69,9 +93,16 @@ const AuthForm = ({
                   </Link>
                 )}
               </div>
-              <Input id="password" type="password" required />
+              <Input
+                id="password"
+                type="password"
+                placeholder="********"
+                value={data.password}
+                onChange={handleChange}
+                required
+              />
             </div>
-            <Button type="submit" className="w-full">
+            <Button onClick={handleSubmit} type="submit" className="w-full">
               {submitText}
             </Button>
             <Button variant="outline" className="w-full">
