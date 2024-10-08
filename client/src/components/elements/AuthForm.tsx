@@ -10,22 +10,23 @@ type AuthFormProps = {
   title: string;
   description: string;
   submitText: string;
-  extraInput?: React.ReactNode; // This will be for the extra input in the sign-up form
+
   footerText: string;
   footerLink: string;
   footerLinkText: string;
   image: string;
+  type: "login" | "signup";
 };
 
 const AuthForm = ({
   title,
   description,
   submitText,
-  extraInput,
   footerText,
   footerLink,
   footerLinkText,
   image,
+  type,
 }: AuthFormProps) => {
   return (
     <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[700px] mt-3">
@@ -36,6 +37,17 @@ const AuthForm = ({
             <p className="text-balance text-muted-foreground">{description}</p>
           </div>
           <div className="grid gap-4">
+            {type === "signup" && (
+              <div className="grid gap-2">
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  id="username"
+                  type="username"
+                  placeholder="m@example.com"
+                  required
+                />
+              </div>
+            )}
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -48,16 +60,17 @@ const AuthForm = ({
             <div className="grid gap-2">
               <div className="flex items-center">
                 <Label htmlFor="password">Password</Label>
-                <Link
-                  href="/forgot-password"
-                  className="ml-auto inline-block text-sm underline"
-                >
-                  Forgot your password?
-                </Link>
+                {type === "login" && (
+                  <Link
+                    href="/forgot-password"
+                    className="ml-auto inline-block text-sm underline"
+                  >
+                    Forgot your password?
+                  </Link>
+                )}
               </div>
               <Input id="password" type="password" required />
             </div>
-            {extraInput && <div className="grid gap-2">{extraInput}</div>}
             <Button type="submit" className="w-full">
               {submitText}
             </Button>

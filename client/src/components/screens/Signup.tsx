@@ -1,7 +1,4 @@
 import AuthForm from "../elements/AuthForm";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-
 
 function SignUp() {
   return (
@@ -13,12 +10,7 @@ function SignUp() {
       footerLink="/login"
       footerLinkText="Login"
       image="/anime-girl-2.jpg"
-      extraInput={
-        <>
-          <Label htmlFor="confirm-password">Confirm Password</Label>
-          <Input id="confirm-password" type="password" required />
-        </>
-      }
+      type="signup"
     />
   );
 }
