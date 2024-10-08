@@ -36,13 +36,11 @@ const Header = () => {
           <div className="flex items-center gap-4">
             <div className="flex gap-4">
               <Link href="/login">
-                <Button >Login</Button>
+                <Button>Login</Button>
               </Link>
 
               <Link href="/sign-up">
-                <Button variant="ghost" >
-                  Sign Up
-                </Button>
+                <Button variant="ghost">Sign Up</Button>
               </Link>
             </div>
 
