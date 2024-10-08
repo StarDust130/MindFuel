@@ -1,4 +1,6 @@
+import Login from "@/components/screens/Login";
+
 const LoginPage = () => {
-  return <div>LoginPage</div>;
+  return <div><Login /></div>;
 };
 export default LoginPage;
