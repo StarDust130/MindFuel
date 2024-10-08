@@ -8,8 +8,12 @@ const lora = Lora({
 });
 
 export const metadata: Metadata = {
-  title: "MindFuel",
-  description: "A Learning Platform",
+  title: {
+    template: "%s : MindFuel",
+    default: "Welcome: MindFuel",
+  },
+  description:
+    "MindFuel is a learning platform that helps you learn new things and improve your skills.",
 };
 
 export default function RootLayout({
