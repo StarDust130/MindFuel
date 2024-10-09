@@ -5,7 +5,6 @@ import { ChevronLeft } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Form,
   FormControl,
@@ -35,7 +34,7 @@ type AuthFormProps = {
   footerLink: string;
   footerLinkText: string;
   image: string;
-  type: "login" | "signup";
+  type: "Login" | "Signup";
   data: AuthData;
   setData: React.Dispatch<React.SetStateAction<AuthData>>;
 };
@@ -85,9 +84,9 @@ const AuthForm = ({
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className={`${type === "signup" ? "space-y-2" : "space-y-4"}  `}
+              className={`${type === "Signup" ? "space-y-2" : "space-y-4"}  `}
             >
-              {type === "signup" && (
+              {type === "Signup" && (
                 <FormField
                   control={form.control}
                   name="username"
@@ -123,7 +122,7 @@ const AuthForm = ({
                   <FormItem>
                     <div className="flex justify-between items-center">
                       <FormLabel>Password</FormLabel>
-                      {type === "login" && (
+                      {type === "Login" && (
                         <Link
                           href="/forgot-password"
                           className="ml-auto inline-block text-sm underline"
@@ -143,14 +142,14 @@ const AuthForm = ({
                 <Button type="submit" className="w-full">
                   {submitText}
                 </Button>
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full flex gap-3">
                   <Image
                     src="https://img.icons8.com/color/48/google-logo.png"
                     alt="Google_Img"
                     width={20}
                     height={20}
                   />{" "}
-                  Login with Google
+                  {type} with Google
                 </Button>
               </div>
             </form>

@@ -15,7 +15,7 @@ function SignUp() {
       footerLink="/login"
       footerLinkText="Login"
       image="/anime-girl-2.jpg"
-      type="signup"
+      type="Signup"
       data={data}
       setData={setData}
     />
