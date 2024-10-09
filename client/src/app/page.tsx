@@ -1,15 +1,11 @@
 import Header from "@/components/elements/Header";
 
-export default async function Home() {
-  const res = await fetch("http://localhost:3001");
-  const data = await res.text();
-  console.log(data);
-
+const Page = () => {
   return (
     <>
-      {" "}
       <Header />
-      {data}
+      <div>Home Page</div>
     </>
   );
-}
+};
+export default Page;
