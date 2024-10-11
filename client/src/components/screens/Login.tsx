@@ -27,6 +27,7 @@ const LoginForm = () => {
   const { toast } = useToast();
   const router = useRouter();
 
+  //! Login form schema
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -35,6 +36,7 @@ const LoginForm = () => {
     },
   });
 
+  //! Login form submission
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     setLoading(true);
     setError(null);
