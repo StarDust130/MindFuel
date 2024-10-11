@@ -1,6 +1,7 @@
 "use client";
 import axios from "axios";
 import Link from "next/link";
+import Cookies from "js-cookie"; // Import js-cookie
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -42,24 +43,37 @@ const LoginForm = () => {
     setError(null);
 
     try {
-      console.log("Submitting login form: ", values);
       const { email, password } = values;
 
-      // Send the login request
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/login`,
         { email, password }
       );
+
+      //! Get the accessToken
+      const { accessToken } = response.data.data;
+
+      //! Set token in cookies using js-cookie
+      Cookies.set("accessToken", accessToken, {
+        expires: 1, // 1 day
+      });
 
       toast({
         title: "Login successful 🎉",
         description: "You are now logged in.",
       });
 
-      router.push("/");
+      router.push("/profile");
     } catch (err) {
-      console.error("Error during login:", err);
-      setError("Invalid email or password. Please try again.");
+      if (
+        axios.isAxiosError(err) &&
+        err.response &&
+        err.response.status === 401
+      ) {
+        setError("Invalid email or password. Please try again.");
+      } else {
+        setError("Something went wrong. Please try again later.");
+      }
     } finally {
       setLoading(false);
     }
