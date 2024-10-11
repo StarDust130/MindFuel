@@ -21,8 +21,6 @@ import Image from "next/image";
 import { ChevronLeft, Loader } from "lucide-react";
 import { loginSchema } from "@/utils/formSchema";
 
-
-
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
