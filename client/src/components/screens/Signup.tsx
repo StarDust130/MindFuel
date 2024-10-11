@@ -17,11 +17,17 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import Image from "next/image";
 import { ChevronLeft } from "lucide-react";
 import { registerSchema } from "@/utils/formSchema";
-
-
 
 const SignUpForm = () => {
   const [loading, setLoading] = useState(false);
@@ -130,10 +136,15 @@ const SignUpForm = () => {
                   <FormItem>
                     <FormLabel>Role</FormLabel>
                     <FormControl>
-                      <select {...field} className="input">
-                        <option value="student">Student</option>
-                        <option value="teacher">Teacher</option>
-                      </select>
+                      <Select {...field}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select Role" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="student">Student</SelectItem>
+                          <SelectItem value="teacher">Teacher</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
