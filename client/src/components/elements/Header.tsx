@@ -9,8 +9,41 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { cookies } from "next/headers"; // Import cookies API
 
 const Header = () => {
+
+  //! Check for access token in cookies (Server-side in App Router)
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get("accessToken");
+
+  // Function to render buttons based on login state
+  const renderButtons = () => {
+    if (accessToken) {
+      // If user is logged in (access token exists), show "Get Started" button
+      return (
+        <Link className="flex justify-center items-center gap-2" href="/profile">
+          <Button>Get Started</Button>
+          <Button variant={"secondary"}>Logout</Button>
+
+        </Link>
+      );
+    } else {
+      // If user is not logged in, show "Login" and "Sign Up" buttons
+      return (
+        <>
+          <Link href="/login">
+            <Button>Login</Button>
+          </Link>
+
+          <Link href="/sign-up">
+            <Button variant="ghost">Sign Up</Button>
+          </Link>
+        </>
+      );
+    }
+  };
+
   return (
     <header>
       <div className="w-full flex h-16 items-center gap-8 px-6 lg:px-8">
@@ -50,20 +83,22 @@ const Header = () => {
 
           <div className="flex items-center gap-4">
             <div className="hidden md:flex gap-4">
-              <Link href="/login">
-                <Button>Login</Button>
-              </Link>
-
-              <Link href="/sign-up">
-                <Button variant="ghost">Sign Up</Button>
-              </Link>
+              {/* Conditional rendering based on login state */}
+              {renderButtons()}
             </div>
 
             {/* Show Login and Menu for small screens */}
             <div className="md:hidden flex items-center gap-4">
-              <Link href="/login">
-                <Button size="sm">Login</Button>
-              </Link>
+              {/* Conditional rendering for small screens */}
+              {accessToken ? (
+                <Link href="/get-started">
+                  <Button size="sm">Get Started</Button>
+                </Link>
+              ) : (
+                <Link href="/login">
+                  <Button size="sm">Login</Button>
+                </Link>
+              )}
 
               {/* Sheet for small screens with navigation links */}
               <Sheet>
@@ -97,16 +132,26 @@ const Header = () => {
 
                   {/* Optional: Add other actions (login, sign up) in the sheet */}
                   <div className="mt-8">
-                    <Link href="/login">
-                      <Button size="sm" className="w-full mb-4">
-                        Login
-                      </Button>
-                    </Link>
-                    <Link href="/sign-up">
-                      <Button variant="ghost" size="sm" className="w-full">
-                        Sign Up
-                      </Button>
-                    </Link>
+                    {accessToken ? (
+                      <Link href="/get-started">
+                        <Button size="sm" className="w-full mb-4">
+                          Get Started
+                        </Button>
+                      </Link>
+                    ) : (
+                      <>
+                        <Link href="/login">
+                          <Button size="sm" className="w-full mb-4">
+                            Login
+                          </Button>
+                        </Link>
+                        <Link href="/sign-up">
+                          <Button variant="ghost" size="sm" className="w-full">
+                            Sign Up
+                          </Button>
+                        </Link>
+                      </>
+                    )}
                   </div>
                 </SheetContent>
               </Sheet>
