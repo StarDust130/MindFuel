@@ -10,6 +10,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cookies } from "next/headers"; // Import cookies API
+import LogoutButton from "./LogoutButton";
+
 
 const Header = () => {
 
@@ -22,11 +24,12 @@ const Header = () => {
     if (accessToken) {
       // If user is logged in (access token exists), show "Get Started" button
       return (
-        <Link className="flex justify-center items-center gap-2" href="/profile">
-          <Button>Get Started</Button>
-          <Button variant={"secondary"}>Logout</Button>
-
-        </Link>
+        <div className="flex justify-center items-center gap-2">
+          <Link href="/profile">
+            <Button>Get Started</Button>
+          </Link>
+          <LogoutButton />
+        </div>
       );
     } else {
       // If user is not logged in, show "Login" and "Sign Up" buttons

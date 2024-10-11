@@ -61,6 +61,7 @@ export const registerUser = async (req, res) => {
     });
   }
 };
+
 //! Login user 🗒️
 export const loginUser = async (req, res) => {
   try {
@@ -125,6 +126,27 @@ export const loginUser = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "An error occurred while logging in. 😞",
+    });
+  }
+};
+
+//! Logout user 🗒️
+export const logoutUser = async (req, res) => {
+  try {
+    // Clear the accessToken cookie
+    res.clearCookie("accessToken");
+
+    // Send a success response
+    res.status(200).json({
+      success: true,
+      message: "Logged out successfully.",
+    });
+  } catch (error) {
+    // Handle any errors during logout
+    console.error("Logout error:", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while logging out.",
     });
   }
 };
