@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import {Lora}  from "next/font/google";
+import { Lora } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
 
 const lora = Lora({
   subsets: ["latin"],
@@ -23,7 +24,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={` ${lora.className} antialiased`}>{children}</body>
+      <body className={` ${lora.className} antialiased`}>
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }

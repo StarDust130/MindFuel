@@ -1,4 +1,4 @@
-import Login from "@/components/screens/Login";
+import LoginForm from "@/components/screens/Login";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,6 +7,6 @@ export const metadata: Metadata = {
 };
 
 const LoginPage = () => {
-  return <div><Login /></div>;
+  return <div><LoginForm /></div>;
 };
 export default LoginPage;

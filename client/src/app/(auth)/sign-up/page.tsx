@@ -1,4 +1,5 @@
-import Signup from "@/components/screens/Signup"
+import SignUpForm from "@/components/screens/Signup";
+
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,7 +9,9 @@ export const metadata: Metadata = {
 
 const SignUpPage = () => {
   return (
-    <div><Signup /></div>
-  )
-}
-export default SignUpPage
+    <div>
+      <SignUpForm />
+    </div>
+  );
+};
+export default SignUpPage;
