@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { Menu } from "lucide-react";
 import {
   Sheet,
@@ -11,41 +11,12 @@ import {
 } from "@/components/ui/sheet";
 import { cookies } from "next/headers"; // Import cookies API
 import LogoutButton from "./LogoutButton";
-
+import AuthButtons from "./AuthButtons";
 
 const Header = () => {
-
   //! Check for access token in cookies (Server-side in App Router)
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken");
-
-  // Function to render buttons based on login state
-  const renderButtons = () => {
-    if (accessToken) {
-      // If user is logged in (access token exists), show "Get Started" button
-      return (
-        <div className="flex justify-center items-center gap-2">
-          <Link href="/profile">
-            <Button>Get Started</Button>
-          </Link>
-          <LogoutButton />
-        </div>
-      );
-    } else {
-      // If user is not logged in, show "Login" and "Sign Up" buttons
-      return (
-        <>
-          <Link href="/login">
-            <Button>Login</Button>
-          </Link>
-
-          <Link href="/sign-up">
-            <Button variant="ghost">Sign Up</Button>
-          </Link>
-        </>
-      );
-    }
-  };
 
   return (
     <header>
@@ -87,7 +58,7 @@ const Header = () => {
           <div className="flex items-center gap-4">
             <div className="hidden md:flex gap-4">
               {/* Conditional rendering based on login state */}
-              {renderButtons()}
+              <AuthButtons />
             </div>
 
             {/* Show Login and Menu for small screens */}
