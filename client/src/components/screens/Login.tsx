@@ -18,7 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import Image from "next/image";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Loader } from "lucide-react";
 import { loginSchema } from "@/utils/formSchema";
 
 
@@ -85,7 +85,7 @@ const LoginForm = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="your-email@example.com" {...field} />
+                      <Input placeholder="gojo@satoru.jjk" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -117,7 +117,13 @@ const LoginForm = () => {
                 )}
               />
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Logging in..." : "Login"}
+                {loading ? (
+                  <span className="flex justify-center items-center gap-3">
+                    Logging in... <Loader size={20} className="animate-spin" />
+                  </span>
+                ) : (
+                  "Login"
+                )}
               </Button>
             </form>
           </Form>
