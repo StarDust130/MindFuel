@@ -5,16 +5,21 @@ import Link from "next/link";
 import LogoutButton from "./LogoutButton";
 import { Button } from "@/components/ui/button";
 
-const AuthButtons = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+const AuthButtons: React.FC = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null); // null represents loading state
 
   useEffect(() => {
     const accessToken = document.cookie.includes("accessToken");
-    setIsLoggedIn(accessToken);
+    setIsLoggedIn(accessToken); // Set true/false based on the token check
   }, []);
 
+  if (isLoggedIn === null) {
+    return null; // Return null if the state is still loading
+  }
+
   const handleLogout = () => {
-    setIsLoggedIn(false); // Update state when user logs out
+    setIsLoggedIn(false); // Update state on logout
   };
 
   return isLoggedIn ? (
