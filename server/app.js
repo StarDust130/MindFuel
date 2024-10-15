@@ -31,4 +31,13 @@ import authRoutes from "./routes/auth.routes.js";
 
 app.use("/api/v1/auth", authRoutes);
 
+
+//! 404 Page not found
+app.use("*" , (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "Page not found",
+  });
+});
+
 export { app };
