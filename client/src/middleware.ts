@@ -12,11 +12,13 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  //! If token , user is not vist /login page and /register page
-    if (req.url === "/login" || req.url === "/register") {
-        const profileUrl = new URL("/profile", req.url);
-        return NextResponse.redirect(profileUrl);
-    }
+  //! If token, user should not visit /login or /sign-up
+  const pathname = req.nextUrl.pathname; // Get only the pathname part
+
+  if (pathname === "/login" || pathname === "/sign-up") {
+    const profileUrl = new URL("/profile", req.url);
+    return NextResponse.redirect(profileUrl);
+  }
 
   // Allow access if the token exists
   return NextResponse.next();
@@ -24,5 +26,5 @@ export function middleware(req: NextRequest) {
 
 // Apply the middleware only to protected routes
 export const config = {
-  matcher: ["/profile"], // Add other protected routes here
+  matcher: ["/profile", "/login", "/sign-up"], // Add other protected routes here
 };
