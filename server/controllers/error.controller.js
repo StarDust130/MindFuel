@@ -1,3 +1,36 @@
+const sendErrorDev = (err, res) => {
+  res.status(err.statusCode).json({
+    success: false,
+    status: err.status,
+    error: err,
+    message: err.message,
+    stack: err.stack,
+  });
+};
+
+const sendErrorProd = (err, res) => {
+  // Operational, trusted error: send message to client
+  if (err.isOperational) {
+    res.status(err.statusCode).json({
+      success: false,
+      status: err.status,
+      message: err.message,
+    });
+
+    // Programming or other unknown error: don't leak error details
+  } else {
+    // 1) Log error
+    console.error("ERROR 💥", err);
+
+    // 2) Send generic message
+    res.status(500).json({
+      success: false,
+      status: "error",
+      message: "Something went very wrong!",
+    });
+  }
+};
+
 export const globalErrorHandler = (err, req, res, next) => {
   console.log(err.stack); // Log the error stack 📚
 
@@ -6,37 +39,10 @@ export const globalErrorHandler = (err, req, res, next) => {
 
   //! development
   if (process.env.NODE_ENV === "development") {
-    return res.status(err.statusCode).json({
-      success: false,
-      message: err.message,
-      stack: err.stack,
-      error: err,
-    });
+    return sendErrorDev(err, res);
 
     //! production
   } else if (process.env.NODE_ENV === "production") {
-    let error = { ...err };
-
-    error.message = err.message;
-
-    if (error.name === "CastError") {
-      const message = `Resource not found. Invalid: ${error.path}`;
-      error = new AppError(message, 404);
-    }
-
-    if (error.code === 11000) {
-      const message = `Duplicate field value entered`;
-      error = new AppError(message, 400);
-    }
-
-    if (error.name === "ValidationError") {
-      const message = Object.values(error.errors).map((val) => val.message);
-      error = new AppError(message, 400);
-    }
-
-    res.status(error.statusCode).json({
-      success: false,
-      message: error.message || "Internal server error",
-    });
+    return sendErrorProd(err, res);
   }
 };
