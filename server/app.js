@@ -27,6 +27,7 @@ app.use((err, req, res, next) => {
 //! import Routes
 import authRoutes from "./routes/auth.routes.js";
 import { AppError } from "./utils/appError.js";
+import { globalErrorHandler } from "./controllers/error.controller.js";
 
 //! All Routes
 
@@ -38,14 +39,6 @@ app.all("*", (req, res) => {
 });
 
 //! Error Handler Middleware
-app.use((err, req, res, next) => {
-  err.statusCode = err.statusCode || 500;
-  err.status = err.status || "error 😿";
-
-  res.status(err.statusCode).json({
-    success: false,
-    message: err.message,
-  });
-});
+app.use(globalErrorHandler);
 
 export { app };
