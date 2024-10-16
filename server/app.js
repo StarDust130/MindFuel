@@ -26,6 +26,7 @@ app.use((err, req, res, next) => {
 
 //! import Routes
 import authRoutes from "./routes/auth.routes.js";
+import { AppError } from "./utils/appError.js";
 
 //! All Routes
 
@@ -33,11 +34,7 @@ app.use("/api/v1/auth", authRoutes);
 
 //! 404 Page not found
 app.all("*", (req, res) => {
-  const err = new Error(`Can't find ${req.originalUrl} on this server`);
-  err.status = "fail";
-  err.statusCode = 404;
-
-  next(err);
+  next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
 });
 
 //! Error Handler Middleware
