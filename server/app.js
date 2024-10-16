@@ -31,13 +31,25 @@ import authRoutes from "./routes/auth.routes.js";
 
 app.use("/api/v1/auth", authRoutes);
 
-
 //! 404 Page not found
-app.all("*" , (req, res) => {
+app.all("*", (req, res) => {
   res.status(404).json({
     success: false,
     message: "Page not found 😆",
   });
+});
+
+//! Error Handler Middleware
+app.use((err, req, res, next) => {
+  err.statusCode = err.statusCode || 500;
+  err.status = err.status || "error 😿";
+
+  res.status(err.statusCode).json({
+    success: false,
+    message: err.message,
+  });
+
+  next();
 });
 
 export { app };
