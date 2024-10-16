@@ -33,10 +33,11 @@ app.use("/api/v1/auth", authRoutes);
 
 //! 404 Page not found
 app.all("*", (req, res) => {
-  res.status(404).json({
-    success: false,
-    message: "Page not found 😆",
-  });
+  const err = new Error(`Can't find ${req.originalUrl} on this server`);
+  err.status = "fail";
+  err.statusCode = 404;
+
+  next(err);
 });
 
 //! Error Handler Middleware
@@ -48,8 +49,6 @@ app.use((err, req, res, next) => {
     success: false,
     message: err.message,
   });
-
-  next();
 });
 
 export { app };
