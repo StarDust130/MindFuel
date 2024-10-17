@@ -61,13 +61,26 @@ const SignUpForm = () => {
 
       toast({
         title: "Account created successfully 🎉",
-        description: "You can now log in.",
+        description: "Have fun learning!",
       });
 
-      router.push("/login");
+      router.push("/");
     } catch (err) {
       console.error("Error during registration:", err);
-      setError("Something went wrong. Please try again.");
+
+      if (axios.isAxiosError(err)) {
+        // Handle Axios errors with a response from the server
+        if (err.response && err.response.data && err.response.data.message) {
+          setError(err.response.data.message); // Error message from the server
+        } else {
+          setError(err.message); // Fallback to Axios error message
+        }
+      } else if (err instanceof Error) {
+        // Handle non-Axios errors (e.g., generic JS errors)
+        setError(err.message);
+      } else {
+        setError("Something went wrong. Please try again."); // Fallback message
+      }
     } finally {
       setLoading(false);
     }

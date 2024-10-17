@@ -31,8 +31,6 @@ export const registerUser = catchAsync(async (req, res) => {
     });
   }
 
-  
-
   // 5) Create and save new user
   const newUser = await User.create({
     username,
@@ -41,7 +39,27 @@ export const registerUser = catchAsync(async (req, res) => {
     password,
   });
 
-  // 6) Return success response
+  // 6) Create JWT token with 5-second expiration
+  const token = jwt.sign(
+    {
+      _id: newUser._id,
+      username: newUser.username,
+      email: newUser.email,
+      role: newUser
+    },
+    JWT_SECRET,
+    { expiresIn: "7d" } // Token expires in 7 days
+  );
+
+  res.cookie("accessToken", token, {
+    httpOnly: false,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expires in 7 days (7 days * 24 hours * 60 minutes * 60 seconds * 1000 milliseconds)
+    path: "/",
+  });
+
+  // 7) Return success response
   return res.status(201).json({
     success: true,
     message: "User registered successfully! 🥳",
@@ -50,6 +68,7 @@ export const registerUser = catchAsync(async (req, res) => {
       username: newUser.username,
       email: newUser.email,
       role: newUser.role,
+      accessToken: token,
     },
   });
 });
