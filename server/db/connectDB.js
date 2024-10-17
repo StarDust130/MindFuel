@@ -18,10 +18,23 @@ export default connectDB;
 
 //! Unhandled Rejection Error
 process.on("unhandledRejection", (err, promise) => {
+  console.log(
+    "Unhandled Rejection Error. Shutting Down... 💣😞: ",
+    err.message
+  );
   console.log(`Error: ${err.message}`);
   server.close(() => process.exit(1));
-  console.log("Unhandled Rejection Error. Shutting Down... 💣😞: ", err.message);
+  
   
 }
 );
 
+
+//! Uncaught Exception Error
+process.on("uncaughtException", (err, promise) => {
+  console.log("Uncaught Exception Error. Shutting Down... 💣🔮: ", err.message);
+  console.log(`Error: ${err.message}`);
+  server.close(() => process.exit(1));
+  
+}
+);
