@@ -45,7 +45,7 @@ userSchema.index({ email: 1 }); // Create an index on email for faster lookup
 //! HAsh password before saving to DB
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 10);
+  this.password = await bcrypt.hash(this.password, 12);
   next();
 });
 
