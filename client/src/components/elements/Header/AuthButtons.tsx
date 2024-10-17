@@ -2,16 +2,17 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Cookies from "js-cookie"; // Import js-cookie
 import LogoutButton from "./LogoutButton";
 import { Button } from "@/components/ui/button";
-
 
 const AuthButtons: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null); // null represents loading state
 
   useEffect(() => {
-    const accessToken = document.cookie.includes("accessToken");
-    setIsLoggedIn(accessToken); // Set true/false based on the token check
+    const accessToken = Cookies.get("accessToken"); // Use js-cookie to read the token
+    console.log("Access Token from Cookie:", accessToken); // Log token to debug
+    setIsLoggedIn(!!accessToken); // Set state based on token presence
   }, []);
 
   if (isLoggedIn === null) {
@@ -19,6 +20,7 @@ const AuthButtons: React.FC = () => {
   }
 
   const handleLogout = () => {
+    Cookies.remove("accessToken"); // Remove the token on logout
     setIsLoggedIn(false); // Update state on logout
   };
 

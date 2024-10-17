@@ -98,12 +98,16 @@ export const loginUser = catchAsync(async (req, res) => {
   );
 
   // 5) Set JWT as HttpOnly cookie
-  res.cookie("accessToken", token, {
-    httpOnly: true, // Makes it inaccessible from JavaScript
-    secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-    sameSite: "strict", // Helps prevent CSRF
-    maxAge: 2 * 60 * 60 * 1000, // 2 hours in milliseconds
-  });
+ res.cookie("accessToken", token, {
+   httpOnly: false, // Set to false to allow access via JavaScript
+   secure: process.env.NODE_ENV === "production", // Only use secure in production
+   sameSite: "Lax", // Or adjust based on your cross-site needs
+   maxAge: 3600 * 1000, // 1 hour expiration
+   path: "/", // Make the cookie accessible on all routes
+ });
+
+
+ 
 
   // 6) Return success response
   return res.status(200).json({
