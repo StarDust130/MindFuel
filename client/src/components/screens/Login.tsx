@@ -47,16 +47,9 @@ const LoginForm = () => {
 
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/login`,
-        { email, password }
+        { email, password },
+        { withCredentials: true } // Ensure cookies are sent and received
       );
-
-      //! Get the accessToken
-      const { accessToken } = response.data.data;
-
-      //! Set token in cookies using js-cookie
-      Cookies.set("accessToken", accessToken, {
-        expires: 1, // 1 day
-      });
 
       toast({
         title: "Login successful 🎉",
@@ -65,6 +58,7 @@ const LoginForm = () => {
 
       router.push("/profile");
     } catch (err) {
+      console.error("Login error:", err);
       if (
         axios.isAxiosError(err) &&
         err.response &&
