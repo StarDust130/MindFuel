@@ -31,15 +31,14 @@ export const registerUser = catchAsync(async (req, res) => {
     });
   }
 
-  // 4) Hash password
-  const hashedPassword = await bcrypt.hash(password, 10);
+  
 
   // 5) Create and save new user
   const newUser = await User.create({
     username,
     email,
-    password: hashedPassword,
     role,
+    password,
   });
 
   // 6) Return success response
