@@ -1,44 +1,43 @@
 import express from "express";
 import cors from "cors";
+import authRoutes from "./routes/auth.routes.js"; // 🛠️ Import auth routes
+import { AppError } from "./utils/appError.js"; // 🛠️ Import custom AppError class
+import { globalErrorHandler } from "./controllers/error.controller.js"; // 🛠️ Import global error handler
 
 const app = express();
 
 //! Common Middleware
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: process.env.CLIENT_URL, // 🌐 Allow requests from CLIENT_URL
+    methods: ["GET", "POST", "PUT", "DELETE"], // 🔧 Allowed HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization"], // 🔧 Allowed headers
   })
 );
 
-app.use(express.json());
+app.use(express.json()); // 📝 Parse incoming JSON requests
 
+//! Error Logging Middleware
 app.use((err, req, res, next) => {
-  console.log(err.stack);
+  console.log(err.stack); // 🐛 Log the error stack for debugging
   res.status(500).json({
     success: false,
-    message: err.message || "Something went wrong 😞",
+    message: err.message || "Something went wrong 😞", // 💬 Send error message
   });
 });
 
 //! Routes
 
-//! import Routes
-import authRoutes from "./routes/auth.routes.js";
-import { AppError } from "./utils/appError.js";
-import { globalErrorHandler } from "./controllers/error.controller.js";
-
-//! All Routes
-
-app.use("/api/v1/auth", authRoutes);
+//! Auth Routes
+app.use("/api/v1/auth", authRoutes); // 🔒 All authentication routes
 
 //! 404 Page not found
-app.all("*", (req, res) => {
-  next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
+// 💥 Catch all undefined routes
+app.all("*", (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server`, 404)); // 🚨 Pass 404 error to global error handler
 });
 
 //! Error Handler Middleware
-app.use(globalErrorHandler);
+app.use(globalErrorHandler); // 🛑 Use the global error handler
 
-export { app };
+export { app }; // 📦 Export the app
