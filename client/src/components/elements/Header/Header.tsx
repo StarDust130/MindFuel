@@ -10,7 +10,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cookies } from "next/headers"; // Import cookies API
-import LogoutButton from "./LogoutButton";
 import AuthButtons from "./AuthButtons";
 
 const Header = () => {
