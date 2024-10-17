@@ -106,7 +106,7 @@ const Header = () => {
                   {/* Optional: Add other actions (login, sign up) in the sheet */}
                   <div className="mt-8">
                     {accessToken ? (
-                      <Link href="/get-started">
+                      <Link href="/profile">
                         <Button size="sm" className="w-full mb-4">
                           Get Started
                         </Button>
