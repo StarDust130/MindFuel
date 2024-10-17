@@ -56,11 +56,10 @@ export const registerUser = catchAsync(async (req, res) => {
 });
 
 //! Login user 🗒️
-export const loginUser = catchAsync (async (req, res) => {
-  // 1) Destructure request body
+export const loginUser = catchAsync(async (req, res) => {
   const { email, password } = req.body;
 
-  // 2) Validate required fields
+  // 1) Validate required fields
   if (!email || !password) {
     return res.status(400).json({
       success: false,
@@ -68,7 +67,7 @@ export const loginUser = catchAsync (async (req, res) => {
     });
   }
 
-  // 3) Check if user exists
+  // 2) Check if user exists
   const user = await User.findOne({ email });
   if (!user) {
     return res.status(401).json({
@@ -77,7 +76,7 @@ export const loginUser = catchAsync (async (req, res) => {
     });
   }
 
-  // 4) Compare passwords
+  // 3) Compare passwords
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
     return res.status(401).json({
@@ -86,7 +85,7 @@ export const loginUser = catchAsync (async (req, res) => {
     });
   }
 
-  // 5) Create JWT token
+  // 4) Create JWT token
   const token = jwt.sign(
     {
       _id: user._id,
@@ -95,31 +94,35 @@ export const loginUser = catchAsync (async (req, res) => {
       role: user.role,
     },
     JWT_SECRET,
-    { expiresIn: "2h" } // Adjust the expiry time as needed
+    { expiresIn: "2h" }
   );
 
-  // 6) Return success response with token
+  // 5) Set JWT as HttpOnly cookie
+  res.cookie("accessToken", token, {
+    httpOnly: true, // Makes it inaccessible from JavaScript
+    secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+    sameSite: "strict", // Helps prevent CSRF
+    maxAge: 2 * 60 * 60 * 1000, // 2 hours in milliseconds
+  });
+
+  // 6) Return success response
   return res.status(200).json({
     success: true,
     message: "Logged in successfully.",
     data: {
-      accessToken: token,
-      user: {
-        _id: user._id,
-        username: user.username,
-        email: user.email,
-        role: user.role,
-      },
+      accesToken: token,
     },
   });
 });
 
 //! Logout user 🗒️
-export const logoutUser = catchAsync (async (req, res) => {
-  // Clear the accessToken cookie
-  res.clearCookie("accessToken");
+export const logoutUser = catchAsync(async (req, res) => {
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
 
-  // Send a success response
   res.status(200).json({
     success: true,
     message: "Logged out successfully.",

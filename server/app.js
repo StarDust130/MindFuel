@@ -12,6 +12,7 @@ app.use(
     origin: process.env.CLIENT_URL, // 🌐 Allow requests from CLIENT_URL
     methods: ["GET", "POST", "PUT", "DELETE"], // 🔧 Allowed HTTP methods
     allowedHeaders: ["Content-Type", "Authorization"], // 🔧 Allowed headers
+    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
   })
 );
 
