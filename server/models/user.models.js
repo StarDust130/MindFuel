@@ -8,11 +8,15 @@ const userSchema = new mongoose.Schema(
       trim: true,
       minlength: [2, "Username must be at least 2 characters"],
       maxlength: [50, "Username can't exceed 50 characters"],
+      lowercase: true, 
+      unique: true, 
+
     },
     email: {
       type: String,
       required: [true, "Email is required"],
       trim: true,
+      lowercase: true, // Convert email to lowercase
       unique: true, // Ensure email is unique
       match: [/.+\@.+\..+/, "Please enter a valid email address"], // Email format validation
     },
@@ -28,6 +32,11 @@ const userSchema = new mongoose.Schema(
       default: "student",
       trim: true,
     },
+    profilePicture:{
+      type: String,
+      default: "",
+
+    }
   },
   { timestamps: true }
 );
