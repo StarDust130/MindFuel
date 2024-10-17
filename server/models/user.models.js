@@ -42,9 +42,12 @@ const userSchema = new mongoose.Schema(
 userSchema.index({ email: 1 }); // Create an index on email for faster lookup
 
 
-//! HAsh password before saving to DB
+//! Hash password before saving to DB
 userSchema.pre("save", async function (next) {
+  // Only hash the password if it has been modified (or is new)
   if (!this.isModified("password")) return next();
+
+  // Hash the password
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
