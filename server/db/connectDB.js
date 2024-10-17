@@ -14,3 +14,14 @@ const connectDB = async () => {
 };
 
 export default connectDB;
+
+
+//! Unhandled Rejection Error
+process.on("unhandledRejection", (err, promise) => {
+  console.log(`Error: ${err.message}`);
+  server.close(() => process.exit(1));
+  console.log("Unhandled Rejection Error. Shutting Down... 💣😞: ", err.message);
+  
+}
+);
+
