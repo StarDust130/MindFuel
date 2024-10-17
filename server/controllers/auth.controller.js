@@ -5,6 +5,7 @@ import { catchAsync } from "../utils/catchAsync.js";
 
 // Load environment variables
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
 
 //! Register user 🗒️
 export const registerUser = catchAsync(async (req, res) => {
@@ -45,10 +46,10 @@ export const registerUser = catchAsync(async (req, res) => {
       _id: newUser._id,
       username: newUser.username,
       email: newUser.email,
-      role: newUser
-    },
+      role: newUser,
+    }, // -> payload
     JWT_SECRET,
-    { expiresIn: "7d" } // Token expires in 7 days
+    { expiresIn: JWT_EXPIRES_IN } //  -> Token expires in 7 days
   );
 
   res.cookie("accessToken", token, {
@@ -112,7 +113,7 @@ export const loginUser = catchAsync(async (req, res) => {
      role: user.role,
    },
    JWT_SECRET,
-   { expiresIn: "7d" } // Token expires in 7 days
+   { expiresIn: JWT_EXPIRES_IN } // Token expires in 7 days
  );
 
  res.cookie("accessToken", token, {
