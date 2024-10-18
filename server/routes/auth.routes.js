@@ -1,6 +1,10 @@
 import express from "express";
-import { loginUser, logoutUser, registerUser } from "../controllers/auth.controller.js";
-
+import {
+  loginUser,
+  logoutUser,
+  protectRoute,
+  registerUser,
+} from "../controllers/auth.controller.js";
 
 const router = express.Router();
 
@@ -9,6 +13,6 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 
 //! Protected Routes
-router.get("/logout", logoutUser);
+router.get("/logout", protectRoute, logoutUser);
 
 export default router;

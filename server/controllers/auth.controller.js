@@ -134,3 +134,27 @@ export const logoutUser = catchAsync(async (req, res) => {
     message: "Logged out successfully.",
   });
 });
+
+
+
+//! Protect routes 🛝
+export const protectRoute = catchAsync(async (req, res, next) => {
+  // 1) Check if token exists
+  const token = req.cookies.accessToken;
+  if (!token) {
+    return next(new AppError("You are not logged in. Please log in to get access.", 401));
+  }
+
+  // 2) Verify token
+  const decoded = jwt.verify(token, JWT_SECRET);
+
+  // 3) Check if user still exists
+  const currentUser = await User.findById(decoded._id);
+  if (!currentUser) {
+    return next(new AppError("The user belonging to this token does no longer exist.", 401));
+  }
+
+  // 4) Grant access to protected route
+  req.user = currentUser;
+  next();
+});
