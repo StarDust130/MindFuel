@@ -80,13 +80,13 @@ export const loginUser = catchAsync(async (req, res, next) => {
   }
 
   // 2) Check if user exists
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).select("+password");
   if (!user) {
     return next(new AppError("User not found.", 404));
   }
 
   // 3) Compare passwords
-  const isPasswordValid = await bcrypt.compare(password, user.password);
+  const isPasswordValid = await user.comparePassword(password);
   if (!isPasswordValid) {
     return next(new AppError("Invalid email or password.", 401));
   }
