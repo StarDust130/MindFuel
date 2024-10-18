@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema(
       trim: true,
       select: false, // Prevent sending password to client
     },
+    passwordChangedAt: Date,
     role: {
       type: String,
       enum: ["student", "teacher"],
@@ -59,3 +60,19 @@ userSchema.methods.comparePassword = async function (password) {
 };
 
 export const User = mongoose.model("User", userSchema);
+
+
+//! changed Password After middleware
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+
+    return JWTTimestamp < changedTimestamp;
+  }
+
+  // False means NOT changed
+  return false;
+};
