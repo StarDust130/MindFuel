@@ -172,10 +172,19 @@ export const protectRoute = catchAsync(async (req, res, next) => {
 });
 
 //! Restrict routes 🚫
-export const restrictRoute = (...roles) => {
+
+// Define user roles
+export const Roles = Object.freeze({
+  STUDENT: 'student',
+  TEACHER: 'teacher',
+  ADMIN: 'admin',
+});
+
+
+export const restrictRoute = (...allowedRoles) => {
   return (req, res, next) => {
     // Check if user role is allowed to access route
-    if (!roles.includes(req.user.role)) {
+    if (!allowedRoles.includes(req.user.role)) {
       return next(
         new AppError("You do not have permission to perform this action.", 403)
       );

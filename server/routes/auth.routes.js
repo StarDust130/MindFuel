@@ -4,6 +4,8 @@ import {
   logoutUser,
   protectRoute,
   registerUser,
+  restrictRoute,
+  Roles,
 } from "../controllers/auth.controller.js";
 import { getAllUsers } from "../controllers/user.controller.js";
 
@@ -18,6 +20,11 @@ router.post("/login", loginUser);
 router.get("/logout" , logoutUser);
 
 //!  Admin Routes
-router.get("/",protectRoute , getAllUsers);
+router.get(
+  "/",
+  protectRoute,
+  restrictRoute(Roles.STUDENT),
+  getAllUsers
+);
 
 export default router;
