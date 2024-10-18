@@ -14,9 +14,9 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 
 //! Protected Routes
-router.get("/logout", logoutUser);
+router.get("/logout" , logoutUser);
 
-//! 
-router.get("/", getAllUsers);
+//!  Admin Routes
+router.get("/",protectRoute , getAllUsers);
 
 export default router;
