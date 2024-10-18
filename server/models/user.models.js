@@ -43,7 +43,6 @@ const userSchema = new mongoose.Schema(
 
 userSchema.index({ email: 1 }); // Create an index on email for faster lookup
 
-
 //! Hash password before saving to DB
 userSchema.pre("save", async function (next) {
   // Only hash the password if it has been modified (or is new)
@@ -61,7 +60,6 @@ userSchema.methods.comparePassword = async function (password) {
 
 export const User = mongoose.model("User", userSchema);
 
-
 //! changed Password After middleware
 userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   if (this.passwordChangedAt) {
@@ -70,6 +68,7 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
       10
     );
 
+    // True means changed password after token was issued (i.e. user logged in)  ex: 100 < 200 => true => password changed after token was issued
     return JWTTimestamp < changedTimestamp;
   }
 
