@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema(
     passwordChangedAt: Date,
     role: {
       type: String,
-      enum: ["student", "teacher"],
+      enum: ["student", "teacher" , "admin"],
       default: "student",
       trim: true,
     },

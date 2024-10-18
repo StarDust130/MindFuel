@@ -21,7 +21,7 @@ export const registerSchema = z.object({
     .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
     .regex(/[0-9]/, "Password must contain at least one number")
     .regex(/[\W_]/, "Password must contain at least one special character"), // e.g., !@#$%
-  role: z.enum(["student", "teacher"]),
+  role: z.enum(["student", "teacher" , "admin"]),
 });
 
 // Login schema validation
