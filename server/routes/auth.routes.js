@@ -5,6 +5,7 @@ import {
   protectRoute,
   registerUser,
 } from "../controllers/auth.controller.js";
+import { getAllUsers } from "../controllers/user.controller.js";
 
 const router = express.Router();
 
@@ -13,6 +14,9 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 
 //! Protected Routes
-router.get("/logout", protectRoute, logoutUser);
+router.get("/logout", logoutUser);
+
+//! 
+router.get("/", getAllUsers);
 
 export default router;
