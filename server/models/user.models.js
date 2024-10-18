@@ -58,7 +58,7 @@ userSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-export const User = mongoose.model("User", userSchema);
+
 
 //! changed Password After middleware
 userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
@@ -75,3 +75,5 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   // False means NOT changed
   return false;
 };
+
+export const User = mongoose.model("User", userSchema);
