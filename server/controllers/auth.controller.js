@@ -2,22 +2,20 @@ import { User } from "../models/user.models.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { catchAsync } from "../utils/catchAsync.js";
+import { AppError } from "../utils/appError.js";
 
 // Load environment variables
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
 
 //! Register user 🗒️
-export const registerUser = catchAsync(async (req, res) => {
+export const registerUser = catchAsync(async (req, res, next) => {
   // 1) Destructure request body
   const { username, email, password, role } = req.body;
 
   // 2) Validate required fields
   if (!username || !email || !password || !role) {
-    return res.status(400).json({
-      success: false,
-      message: "Please fill in all fields.",
-    });
+    next(new AppError("Please fill in all fields.", 400));
   }
 
   // 3) Check if user already exists
@@ -26,10 +24,7 @@ export const registerUser = catchAsync(async (req, res) => {
   });
 
   if (existingUser) {
-    return res.status(400).json({
-      success: false,
-      message: "Username or email already exists.",
-    });
+    next(new AppError("User already exists.", 400));
   }
 
   // 5) Create and save new user
@@ -52,6 +47,7 @@ export const registerUser = catchAsync(async (req, res) => {
     { expiresIn: JWT_EXPIRES_IN } //  -> Token expires in 7 days
   );
 
+  //  Send token in cookie
   res.cookie("accessToken", token, {
     httpOnly: false,
     secure: process.env.NODE_ENV === "production",
@@ -105,25 +101,24 @@ export const loginUser = catchAsync(async (req, res) => {
   }
 
   // 4) Create JWT token with 5-second expiration
- const token = jwt.sign(
-   {
-     _id: user._id,
-     username: user.username,
-     email: user.email,
-     role: user.role,
-   },
-   JWT_SECRET,
-   { expiresIn: JWT_EXPIRES_IN } // Token expires in 7 days
- );
+  const token = jwt.sign(
+    {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+    },
+    JWT_SECRET,
+    { expiresIn: JWT_EXPIRES_IN } // Token expires in 7 days
+  );
 
- res.cookie("accessToken", token, {
-   httpOnly: false,
-   secure: process.env.NODE_ENV === "production",
-   sameSite: "Lax",
-   maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expires in 7 days (7 days * 24 hours * 60 minutes * 60 seconds * 1000 milliseconds)
-   path: "/",
- });
-
+  res.cookie("accessToken", token, {
+    httpOnly: false,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expires in 7 days (7 days * 24 hours * 60 minutes * 60 seconds * 1000 milliseconds)
+    path: "/",
+  });
 
   // 6) Return success response
   return res.status(200).json({
@@ -134,7 +129,6 @@ export const loginUser = catchAsync(async (req, res) => {
     },
   });
 });
-
 
 //! Logout user 🗒️
 export const logoutUser = catchAsync(async (req, res) => {
