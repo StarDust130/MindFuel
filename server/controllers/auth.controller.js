@@ -15,7 +15,7 @@ export const registerUser = catchAsync(async (req, res, next) => {
 
   // 2) Validate required fields
   if (!username || !email || !password || !role) {
-    next(new AppError("Please fill in all fields.", 400));
+    return next(new AppError("Please fill in all fields.", 400));
   }
 
   // 3) Check if user already exists
@@ -24,7 +24,7 @@ export const registerUser = catchAsync(async (req, res, next) => {
   });
 
   if (existingUser) {
-    next(new AppError("User already exists.", 400));
+    return next(new AppError("User already exists.", 400));
   }
 
   // 5) Create and save new user
@@ -71,33 +71,24 @@ export const registerUser = catchAsync(async (req, res, next) => {
 });
 
 //! Login user 🗒️
-export const loginUser = catchAsync(async (req, res) => {
+export const loginUser = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
   // 1) Validate required fields
   if (!email || !password) {
-    return res.status(400).json({
-      success: false,
-      message: "Please fill in all fields.",
-    });
+    return next(new AppError("Please provide email and password."));
   }
 
   // 2) Check if user exists
   const user = await User.findOne({ email });
   if (!user) {
-    return res.status(401).json({
-      success: false,
-      message: "Invalid credentials.",
-    });
+    return next(new AppError("User not found.", 404));
   }
 
   // 3) Compare passwords
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
-    return res.status(401).json({
-      success: false,
-      message: "Invalid credentials.",
-    });
+    return next(new AppError("Invalid email or password.", 401));
   }
 
   // 4) Create JWT token with 5-second expiration
