@@ -9,6 +9,7 @@ import { getAllUsers } from "../controllers/user.controller.js";
 
 const router = express.Router();
 
+
 //! Unprotected Routes
 router.post("/register", registerUser);
 router.post("/login", loginUser);

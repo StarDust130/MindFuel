@@ -137,9 +137,7 @@ export const logoutUser = catchAsync(async (req, res) => {
 //! Protect routes 🛝
 export const protectRoute = catchAsync(async (req, res, next) => {
   // 1) Check if token exists
-  const token =
-    req.cookies.accessToken ||
-    req.headers.authorization 
+  const token = req.cookies.accessToken || req.headers.authorization;
 
   if (!token) {
     return next(

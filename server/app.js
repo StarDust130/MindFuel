@@ -3,6 +3,7 @@ import cors from "cors";
 import authRoutes from "./routes/auth.routes.js"; // 🛠️ Import auth routes
 import { AppError } from "./utils/appError.js"; // 🛠️ Import custom AppError class
 import { globalErrorHandler } from "./controllers/error.controller.js"; // 🛠️ Import global error handler
+import cookieParser from "cookie-parser"; // 🍪 Parse incoming cookies
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(
 );
 
 app.use(express.json()); // 📝 Parse incoming JSON requests
+app.use(cookieParser()); // 🍪 Parse incoming cookies
 
 //! Error Logging Middleware
 app.use((err, req, res, next) => {
