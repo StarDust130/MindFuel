@@ -193,3 +193,14 @@ export const restrictRoute = (...allowedRoles) => {
   };
 };
 
+
+//! Forgot password 🗝️
+export const forgotPassword = catchAsync(async (req, res, next) => {
+
+});
+
+
+//! Reset password 🔑
+export const resetPassword = catchAsync(async (req, res, next) => {
+
+});
