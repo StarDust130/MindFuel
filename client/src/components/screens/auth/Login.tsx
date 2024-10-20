@@ -21,7 +21,8 @@ import {
 import Image from "next/image";
 import {  Loader } from "lucide-react";
 import { loginSchema } from "@/utils/formSchema";
-import BackButton from "../elements/BackButton";
+import BackButton from "@/components/elements/BackButton";
+
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
