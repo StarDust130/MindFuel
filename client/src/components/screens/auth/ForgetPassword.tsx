@@ -1,8 +1,8 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import BackButton from "../elements/BackButton";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+import BackButton from "../../elements/BackButton";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
 import { useForm } from "react-hook-form";
 import { forgetPasswordSchema } from "@/utils/formSchema";
 import { z } from "zod";
@@ -13,7 +13,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
+} from "../../ui/form";
 import Link from "next/link";
 import { useState } from "react";
 import axios from "axios";
