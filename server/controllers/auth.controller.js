@@ -292,14 +292,7 @@ export const resetPassword = catchAsync(async (req, res, next) => {
   await user.save();
 
   // 4) Log the user in, send JWT
-
-  const token = signToken(user._id);
-
-  res.status(200).json({
-    status: "success",
-    message: "Password reset successful! 😆",
-    token,
-  });
+  createSendToken(user, 200, res);
 });
 
 //! Update password 🛠️
