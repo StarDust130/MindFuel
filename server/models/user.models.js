@@ -29,9 +29,11 @@ const userSchema = new mongoose.Schema(
       select: false, // Prevent sending password to client
     },
     passwordChangedAt: Date,
+    passwordResetToken: String,
+    passwordResetExpires: Date,
     role: {
       type: String,
-      enum: ["student", "teacher" , "admin"],
+      enum: ["student", "teacher", "admin"],
       default: "student",
       trim: true,
     },
@@ -58,8 +60,6 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
-
-
 
 //! changed Password After middleware
 userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
@@ -88,10 +88,13 @@ userSchema.methods.createPasswordResetToken = function () {
     .update(resetToken)
     .digest("hex");
 
+    console.log({ resetToken }, this.passwordResetToken);
+    
+
   // Set token expiration time
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // Token expires in 10 minutes
 
   return resetToken;
-}
+};
 
 export const User = mongoose.model("User", userSchema);
