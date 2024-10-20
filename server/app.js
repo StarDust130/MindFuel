@@ -4,10 +4,11 @@ import authRoutes from "./routes/auth.routes.js"; // 🛠️ Import auth routes
 import { AppError } from "./utils/appError.js"; // 🛠️ Import custom AppError class
 import { globalErrorHandler } from "./controllers/error.controller.js"; // 🛠️ Import global error handler
 import cookieParser from "cookie-parser"; // 🍪 Parse incoming cookies
+import rateLimit from "express-rate-limit"; // 🚫 Limit requests
 
 const app = express();
 
-//! Common Middleware
+//! Global Middleware
 app.use(
   cors({
     origin: process.env.CLIENT_URL, // 🌐 Allow requests from CLIENT_URL
@@ -16,6 +17,15 @@ app.use(
     credentials: true, // Allow credentials (cookies, authorization headers, etc.)
   })
 );
+
+//! Rate Limiting Middleware
+const limiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 15 minutes
+  max: 1000, // limit each IP to 100 requests per windowMs
+  message: "Too many requests from this IP, please try again after an hour",
+});
+
+app.use("/api", limiter); // 🚫 Apply rate limiter to all requests to /api
 
 app.use(express.json()); // 📝 Parse incoming JSON requests
 app.use(cookieParser()); // 🍪 Parse incoming cookies
