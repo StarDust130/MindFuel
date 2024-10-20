@@ -271,7 +271,6 @@ export const resetPassword = catchAsync(async (req, res, next) => {
     return next(new AppError("Token is invalid or has expired.", 400));
   }
 
-  
   // 3) Update changedPasswordAt property for the user
   user.password = req.body.password;
 
@@ -287,6 +286,42 @@ export const resetPassword = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     message: "Password reset successful! 😆",
+    token,
+  });
+});
+
+//! Update password 🛠️
+export const updatePassword = catchAsync(async (req, res, next) => {
+  // 1) Get user from collection
+  const { currentPassword, newPassword, passwordConfirm } = req.body;
+
+  if (!currentPassword || !newPassword || !passwordConfirm) {
+    return next(
+      new AppError(
+        "Please provide current password, new password, and confirm password.",
+        400
+      )
+    );
+  }
+  const user = await User.findById(req.user._id).select("+password");
+
+  // 2) Check if posted current password is correct
+
+  if (!(await user.comparePassword(currentPassword))) {
+    return next(new AppError("Your current password is wrong.", 401));
+  }
+
+  // 3) If so, update password
+  user.password = newPassword;
+
+  await user.save();
+
+  // 4) Log user in, send JWT
+  const token = signToken(user._id);
+
+  res.status(200).json({
+    status: "success",
+    message: "Password updated successfully! 😆",
     token,
   });
 });
