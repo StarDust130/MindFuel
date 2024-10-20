@@ -6,6 +6,8 @@ import { globalErrorHandler } from "./controllers/error.controller.js"; // 🛑 
 import cookieParser from "cookie-parser"; // 🍪 Parse incoming cookies
 import rateLimit from "express-rate-limit"; // 🚫 Limit requests
 import helmet from "helmet"; // 🔒 Secure HTTP headers
+import mongoSanitize from "express-mongo-sanitize"; // 🔒 Sanitize data
+import xss from "xss-clean"; // 🔒 Sanitize data
 
 const app = express(); // 🚀 Initialize Express app
 
@@ -32,6 +34,14 @@ app.use("/api", limiter); // 🚫 Apply rate limiter to all requests to /api
 
 app.use(express.json({ limit: "10kb" })); // 📝 Parse incoming JSON requests, limit size to 10KB
 app.use(cookieParser()); // 🍪 Parse cookies from incoming requests
+
+// Data sanitization against NoSQL query injection
+app.use(mongoSanitize());
+
+
+
+// Data sanitization against XSS
+app.use(xss());
 
 // Server static files
 app.use(express.static(`${__dirname}/public`));
