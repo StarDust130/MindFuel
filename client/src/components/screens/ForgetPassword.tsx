@@ -129,6 +129,8 @@ export const ForgetPassword = () => {
               src="/email.gif"
               alt="Email Sent"
               className="w-40 h-40 mx-auto"
+                width={160}
+                height={160}
             />
             <p className="text-green-600">
               Email sent successfully! Check your inbox for the reset link.
