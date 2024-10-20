@@ -5,6 +5,7 @@ import { AppError } from "./utils/appError.js"; // 🛠️ Import custom AppErro
 import { globalErrorHandler } from "./controllers/error.controller.js"; // 🛠️ Import global error handler
 import cookieParser from "cookie-parser"; // 🍪 Parse incoming cookies
 import rateLimit from "express-rate-limit"; // 🚫 Limit requests
+import helmet from "helmet"; // 🔒 Secure HTTP headers
 
 const app = express();
 
@@ -18,7 +19,10 @@ app.use(
   })
 );
 
-//! Rate Limiting Middleware
+
+app.use(helmet()); // 🔒 Set security HTTP headers
+
+//? Rate Limiting Middleware (Prevent Brute Force Attacks)
 const limiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour window
   max: 500, // limit each IP to 500 requests per windowMs
@@ -26,6 +30,8 @@ const limiter = rateLimit({
 });
 
 app.use("/api", limiter); // 🚫 Apply rate limiter to all requests to /api
+
+
 
 app.use(express.json()); // 📝 Parse incoming JSON requests
 app.use(cookieParser()); // 🍪 Parse incoming cookies
