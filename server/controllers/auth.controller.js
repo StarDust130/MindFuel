@@ -194,6 +194,10 @@ export const restrictRoute = (...allowedRoles) => {
 
 //! Forgot password 🗝️
 export const forgotPassword = catchAsync(async (req, res, next) => {
+  if (!req.body.email) {
+    return next(new AppError("Please provide an email address.", 400));
+  }
+
   // 1) Get user based on posted email
   const user = await User.findOne({
     email: req.body.email,
@@ -204,14 +208,17 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
   }
 
   // 2) Generate the random reset token
+  const resetToken = user.createPasswordResetToken();
 
-  
+  // Save the user with the reset token and disable all validation
+  await user.save({ validateBeforeSave: false });
 
   // 3) Send it to user's email
 
   res.status(200).json({
     status: "success",
     message: "Token sent to email!",
+    resetToken: resetToken,
   });
 });
 
