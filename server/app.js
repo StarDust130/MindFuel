@@ -39,7 +39,7 @@ app.use(xss()); // 🔒 Sanitize XSS
 app.use(hpp({ whitelist: [] })); // 🔒 Prevent HTTP Parameter Pollution
 
 //! Serve static files
-app.use(express.static(`${__dirname}/public`)); // 📂 Serve static files
+app.use(express.static(`public`)); // 📂 Serve static files
 
 //! Error Logging Middleware
 app.use((err, req, res, next) => {
@@ -62,9 +62,6 @@ app.all("*", (req, res, next) => {
 app.use(globalErrorHandler); // 🛑 Use global error handler
 
 export { app }; // 📤 Export the app
-
-
-
 
 // CORS 🌐: Enables Cross-Origin Resource Sharing.
 // Helmet 🛡️: Secures HTTP headers.
