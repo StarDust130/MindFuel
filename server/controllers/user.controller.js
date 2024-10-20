@@ -18,41 +18,47 @@ export const updateMe = catchAsync(async (req, res, next) => {
   // 1️⃣ Get the user from the collection
   const user = await User.findById(req.user.id);
 
-  const { name, email } = req.body;
+  const { username, email } = req.body;
 
-  // 2️⃣ Validate: Ensure name and email are provided
-  if (!name || !email) {
+  // 2️⃣ Validate: If both fields are empty, return an error
+  if (!username && !email) {
     return res.status(400).json({
       success: false,
-      message: "Name and email cannot be empty.",
+      message: "Please provide at least one field to update (username or email).",
     });
   }
 
-  // 3️⃣ Validate: Check if the new email is the same as the current one
-  if (email === user.email) {
-    return res.status(400).json({
-      success: false,
-      message: "New email cannot be the same as the current email.",
-    });
+  // 3️⃣ Update: If username is provided, update username
+  if (username) {
+    user.username = username;
   }
 
-  // 4️⃣ Validate: Check if the email is already in use by another user
-  const existingUser = await User.findOne({ email });
-  if (existingUser && existingUser.id !== req.user.id) {
-    return res.status(400).json({
-      success: false,
-      message: "This email is already in use by another user.",
-    });
+  // 4️⃣ Update: If email is provided, check for uniqueness
+  if (email) {
+    // Prevent user from updating to the same email
+    if (email === user.email) {
+      return res.status(400).json({
+        success: false,
+        message: "New email cannot be the same as the current email.",
+      });
+    }
+
+    // Check if the email is already in use by another user
+    const existingUser = await User.findOne({ email });
+    if (existingUser && existingUser.id !== req.user.id) {
+      return res.status(400).json({
+        success: false,
+        message: "This email is already in use by another user.",
+      });
+    }
+
+    user.email = email;
   }
 
-  // 5️⃣ Update user document with new name and email
-  user.name = name;
-  user.email = email;
-
-  // 6️⃣ Save the updated user document
+  // 5️⃣ Save the updated user document
   await user.save();
 
-  // 7️⃣ Send response
+  // 6️⃣ Send response
   res.status(200).json({
     success: true,
     message: "User updated successfully! 🎉",
@@ -61,4 +67,5 @@ export const updateMe = catchAsync(async (req, res, next) => {
     },
   });
 });
+
 
