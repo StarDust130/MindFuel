@@ -14,7 +14,7 @@ export const getAllUsers = catchAsync(async (req, res, next) => {
 });
 
 //! Update user data 🛠️
-export const updateMe =catchAsync(async (req, res, next) => {
+export const updateMe = catchAsync(async (req, res, next) => {
   // 1) Get user from collection
   const user = await User.findById(req.user.id);
 

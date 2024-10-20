@@ -25,7 +25,7 @@ router.patch("/resetPassword/:token", resetPassword);
 //! Protected Routes
 router.get("/logout" , protectRoute , logoutUser);
 router.patch("/updateMyPassword", protectRoute, updatePassword);
-router.patch("/updateMyData", protectRoute, updateMe);
+router.patch("/updateMe", protectRoute, updateMe);
 
 
 //!  Admin Routes
