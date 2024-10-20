@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { emailTemplate } from "./emailTemplate";
 
 const sendEmail = async (options) => {
   // 1) Create a transporter
@@ -16,7 +17,8 @@ const sendEmail = async (options) => {
     from: "ChandraShekhar <hello@mindfuel.io>", // Fix missing closing quote
     to: options.email,
     subject: options.subject,
-    text: options.message,
+    html: emailTemplate.replace("{{resetLink}}", options.resetLink), 
+    //
   };
 
   // 3) Actually send the email

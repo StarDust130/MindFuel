@@ -19,9 +19,7 @@ const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
 
   res.cookie("jwt", token, {
-    expires: new Date(
-      Date.now() + JWT_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ),
+    expires: new Date(Date.now() + JWT_EXPIRES_IN * 24 * 60 * 60 * 1000),
     secure: process.env.NODE_ENV === "production",
     httpOnly: true,
   });
@@ -246,17 +244,15 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
 
   // 3) Send it to user's email
 
-  const resetURL = `${req.protocol}://${req.get(
+  const resetURL = `${process.env.CLIENT_URL}://${req.get(
     "host"
   )}/api/v1/auth/resetPassword/${resetToken}`;
-
-  const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
 
   try {
     await sendEmail({
       email: user.email,
       subject: "Your password reset token (valid for 10 min)",
-      message,
+      resetURL,
     });
 
     res.status(200).json({
@@ -349,4 +345,3 @@ export const updatePassword = catchAsync(async (req, res, next) => {
   // 7️⃣ Respond with success message and the new token
   createSendToken(user, 200, res);
 });
-

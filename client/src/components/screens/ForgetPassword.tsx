@@ -19,11 +19,13 @@ import { useState } from "react";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
 import { Loader } from "lucide-react";
+import Image from "next/image";
 
 export const ForgetPassword = () => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
   // Initialize form schema
   const form = useForm<z.infer<typeof forgetPasswordSchema>>({
@@ -47,6 +49,7 @@ export const ForgetPassword = () => {
       );
 
       // Success message
+      setSuccess(true);
       toast({
         title: "Email Sent Successfully 📬",
         description: "Check your email for the reset link",
@@ -87,35 +90,51 @@ export const ForgetPassword = () => {
 
         {error && <p className="text-red-600">{error}</p>}
 
-        <div className="w-full max-w-sm">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="gojo@satoru.jjk" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? (
-                  <span className="flex justify-center items-center gap-3">
-                    Sending Email...{" "}
-                    <Loader size={20} className="animate-spin" />
-                  </span>
-                ) : (
-                  "Send Reset Link"
-                )}
-              </Button>
-            </form>
-          </Form>
-        </div>
+        {!success ? (
+          <div className="w-full max-w-sm">
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
+              >
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input placeholder="gojo@satoru.jjk" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? (
+                    <span className="flex justify-center items-center gap-3">
+                      Sending Email...{" "}
+                      <Loader size={20} className="animate-spin" />
+                    </span>
+                  ) : (
+                    "Send Reset Link"
+                  )}
+                </Button>
+              </form>
+            </Form>
+          </div>
+        ) : (
+          <div className="w-full max-w-sm">
+            <Image
+              src="/email.gif"
+              alt="Email Sent"
+              className="w-40 h-40 mx-auto"
+            />
+            <p className="text-green-600">
+              Email sent successfully! Check your inbox for the reset link.
+            </p>
+          </div>
+        )}
 
         <div className="mt-4 text-center text-sm">
           Don't have an account?{" "}
