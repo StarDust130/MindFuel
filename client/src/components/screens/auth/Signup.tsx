@@ -28,6 +28,7 @@ import {
 import Image from "next/image";
 import { ChevronLeft, Loader } from "lucide-react";
 import { registerSchema } from "@/utils/formSchema";
+import BackButton from "@/components/elements/BackButton";
 
 const SignUpForm = () => {
   const [loading, setLoading] = useState(false);
@@ -196,14 +197,7 @@ const SignUpForm = () => {
           alt="register-image"
         />
       </div>
-      <Link href="/">
-        <Button
-          variant={"ghost"}
-          className="absolute top-2 left-0 md:top-5 md:left-5"
-        >
-          <ChevronLeft />
-        </Button>
-      </Link>
+      <BackButton />
     </div>
   );
 };

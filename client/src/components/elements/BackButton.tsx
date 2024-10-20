@@ -1,19 +1,20 @@
-import Link from "next/link";
+"use client";
 import { Button } from "../ui/button";
 import { ChevronLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const BackButton = () => {
+  const router = useRouter();
   return (
-    <div >
-      <Link href="/">
-        <Button
-          variant={"ghost"}
-          className="absolute top-2 left-0 md:top-5 md:left-5"
-        >
-          <ChevronLeft />
-        </Button>
-      </Link>
+    <div>
+      <Button
+        variant={"ghost"}
+        className="absolute top-2 left-0 md:top-5 md:left-5"
+        onClick={() => router.back()}
+      >
+        <ChevronLeft />
+      </Button>
     </div>
   );
-}
-export default BackButton
+};
+export default BackButton;
