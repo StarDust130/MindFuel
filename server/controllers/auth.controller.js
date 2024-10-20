@@ -9,6 +9,12 @@ import crypto from "crypto";
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
 
+const signToken = (id) => {
+  return jwt.sign({ id }, JWT_SECRET, {
+    expiresIn: JWT_EXPIRES_IN,
+  });
+};
+
 //! Register user 🗒️
 export const registerUser = catchAsync(async (req, res, next) => {
   // 1) Destructure request body
@@ -265,6 +271,7 @@ export const resetPassword = catchAsync(async (req, res, next) => {
     return next(new AppError("Token is invalid or has expired.", 400));
   }
 
+  
   // 3) Update changedPasswordAt property for the user
   user.password = req.body.password;
 
@@ -275,6 +282,11 @@ export const resetPassword = catchAsync(async (req, res, next) => {
 
   // 4) Log the user in, send JWT
 
+  const token = signToken(user._id);
 
-  
+  res.status(200).json({
+    status: "success",
+    message: "Password reset successful! 😆",
+    token,
+  });
 });
