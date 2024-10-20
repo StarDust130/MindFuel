@@ -175,11 +175,10 @@ export const protectRoute = catchAsync(async (req, res, next) => {
 
 // Define user roles
 export const Roles = Object.freeze({
-  STUDENT: 'student',
-  TEACHER: 'teacher',
-  ADMIN: 'admin',
+  STUDENT: "student",
+  TEACHER: "teacher",
+  ADMIN: "admin",
 });
-
 
 export const restrictRoute = (...allowedRoles) => {
   return (req, res, next) => {
@@ -193,14 +192,28 @@ export const restrictRoute = (...allowedRoles) => {
   };
 };
 
-
 //! Forgot password 🗝️
 export const forgotPassword = catchAsync(async (req, res, next) => {
+  // 1) Get user based on posted email
+  const user = await User.findOne({
+    email: req.body.email,
+  });
 
+  if (!user) {
+    return next(new AppError("There is no user with that email address.", 404));
+  }
+
+  // 2) Generate the random reset token
+
+  
+
+  // 3) Send it to user's email
+
+  res.status(200).json({
+    status: "success",
+    message: "Token sent to email!",
+  });
 });
-
 
 //! Reset password 🔑
-export const resetPassword = catchAsync(async (req, res, next) => {
-
-});
+export const resetPassword = catchAsync(async (req, res, next) => {});
