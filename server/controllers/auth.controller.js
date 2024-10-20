@@ -26,6 +26,9 @@ const createSendToken = (user, statusCode, res) => {
     httpOnly: true,
   });
 
+  // Remove password from output
+  user.password = undefined;
+
   res.status(statusCode).json({
     status: "success",
     token,
