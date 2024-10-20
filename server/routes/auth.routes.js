@@ -10,7 +10,7 @@ import {
   Roles,
   updatePassword,
 } from "../controllers/auth.controller.js";
-import { getAllUsers, updateMe } from "../controllers/user.controller.js";
+import { deleteMe, getAllUsers, updateMe } from "../controllers/user.controller.js";
 
 const router = express.Router();
 
@@ -26,6 +26,8 @@ router.patch("/resetPassword/:token", resetPassword);
 router.get("/logout" , protectRoute , logoutUser);
 router.patch("/updateMyPassword", protectRoute, updatePassword);
 router.patch("/updateMe", protectRoute, updateMe);
+router.delete("/deleteMe", protectRoute, deleteMe);
+
 
 
 //!  Admin Routes

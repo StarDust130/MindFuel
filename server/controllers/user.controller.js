@@ -24,7 +24,8 @@ export const updateMe = catchAsync(async (req, res, next) => {
   if (!username && !email) {
     return res.status(400).json({
       success: false,
-      message: "Please provide at least one field to update (username or email).",
+      message:
+        "Please provide at least one field to update (username or email).",
     });
   }
 
@@ -68,4 +69,19 @@ export const updateMe = catchAsync(async (req, res, next) => {
   });
 });
 
+//! Delete User 🗑️
+export const deleteMe = catchAsync(async (req, res, next) => {
+  // 1️⃣ Get the user from the collection
+  const user = await User.findByIdAndUpdate(req.user.id, (user.active = false));
+
+  // 2️⃣ Save the updated user document
+  await user.save();
+
+  // 3️⃣ Send response
+  res.status(204).json({
+    success: true,
+    message: "User deleted successfully! 🎉",
+    data: null,
+  });
+});
 

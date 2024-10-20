@@ -338,3 +338,4 @@ export const updatePassword = catchAsync(async (req, res, next) => {
   // 7️⃣ Respond with success message and the new token
   createSendToken(user, 200, res);
 });
+
