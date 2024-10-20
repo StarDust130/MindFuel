@@ -15,6 +15,18 @@ const signToken = (id) => {
   });
 };
 
+const createSendToken = (user, statusCode, res) => {
+  const token = signToken(user._id);
+
+  res.status(statusCode).json({
+    status: "success",
+    token,
+    data: {
+      user,
+    },
+  });
+};
+
 //! Register user 🗒️
 export const registerUser = catchAsync(async (req, res, next) => {
   // 1) Destructure request body
@@ -324,14 +336,6 @@ export const updatePassword = catchAsync(async (req, res, next) => {
   user.password = newPassword;
   await user.save();
 
-  // 7️⃣ Generate a new JWT token for the user
-  const token = signToken(user._id);
-
-  // 8️⃣ Respond with success message and the new token
-  res.status(200).json({
-    status: "success",
-    message: "Password updated successfully! 😆",
-    token,
-  });
+  // 7️⃣ Respond with success message and the new token
+  createSendToken(user, 200, res);
 });
-
