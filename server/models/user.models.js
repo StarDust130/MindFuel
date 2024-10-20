@@ -71,6 +71,13 @@ userSchema.pre("save", function (next) {
   next();
 });
 
+//! Query Middleware to (exclude inactive users) from all find queries
+userSchema.pre(/^find/ , function(next){
+  // this points to the current query
+  this.find({active : {$ne : false}});
+  next();
+})
+
 //! Compare password
 userSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
