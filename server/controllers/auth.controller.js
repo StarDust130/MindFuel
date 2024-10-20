@@ -317,6 +317,12 @@ export const updatePassword = catchAsync(async (req, res, next) => {
     );
   }
 
+  if (newPassword === currentPassword) {
+    return next(
+      new AppError("New password and current password should not be same.", 400)
+    );
+  }
+
   // 4️⃣ Get user from the database (including password for comparison)
   const user = await User.findById(req.user._id).select("+password");
 

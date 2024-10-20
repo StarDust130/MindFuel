@@ -8,8 +8,9 @@ import {
   resetPassword,
   restrictRoute,
   Roles,
+  updatePassword,
 } from "../controllers/auth.controller.js";
-import { getAllUsers } from "../controllers/user.controller.js";
+import { getAllUsers, updateMe } from "../controllers/user.controller.js";
 
 const router = express.Router();
 
@@ -20,8 +21,12 @@ router.post("/login", loginUser);
 router.post("/forgetPassword", forgotPassword);
 router.patch("/resetPassword/:token", resetPassword);
 
+
 //! Protected Routes
-router.get("/logout" , logoutUser);
+router.get("/logout" , protectRoute , logoutUser);
+router.patch("/updateMyPassword", protectRoute, updatePassword);
+router.patch("/updateMyData", protectRoute, updateMe);
+
 
 //!  Admin Routes
 router.get(
@@ -30,6 +35,8 @@ router.get(
   restrictRoute(Roles.STUDENT),
   getAllUsers
 );
+
+
 
 
 
