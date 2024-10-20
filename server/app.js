@@ -8,6 +8,7 @@ import rateLimit from "express-rate-limit"; // 🚫 Limit requests
 import helmet from "helmet"; // 🔒 Secure HTTP headers
 import mongoSanitize from "express-mongo-sanitize"; // 🔒 Sanitize data
 import xss from "xss-clean"; // 🔒 Sanitize data
+import hpp from "hpp"; // 🔒 Protect against HTTP Parameter Pollution attacks
 
 const app = express(); // 🚀 Initialize Express app
 
@@ -38,10 +39,15 @@ app.use(cookieParser()); // 🍪 Parse cookies from incoming requests
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
 
-
-
 // Data sanitization against XSS
 app.use(xss());
+
+// Prevent HTTP Parameter Pollution
+app.use(
+  hpp({
+    whitelist: [], // 🔒 Allow duplicate parameters
+  })
+);
 
 // Server static files
 app.use(express.static(`${__dirname}/public`));
