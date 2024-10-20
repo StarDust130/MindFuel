@@ -15,9 +15,17 @@ import {
   FormMessage,
 } from "../ui/form";
 import Link from "next/link";
+import { useState } from "react";
+import axios from "axios";
+import { useToast } from "@/hooks/use-toast";
+import { Loader } from "lucide-react";
 
 export const ForgetPassword = () => {
-  // forgetPassword schema
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
+  const [error, setError] = useState<string | null>(null);
+
+  // Initialize form schema
   const form = useForm<z.infer<typeof forgetPasswordSchema>>({
     resolver: zodResolver(forgetPasswordSchema),
     defaultValues: {
@@ -26,7 +34,47 @@ export const ForgetPassword = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof forgetPasswordSchema>) => {
-    console.log(values);
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { email } = values;
+
+      // Send request to backend
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/forgetPassword`,
+        { email }
+      );
+
+      // Success message
+      toast({
+        title: "Email Sent Successfully 📬",
+        description: "Check your email for the reset link",
+      });
+    } catch (err) {
+      // Log the error for debugging
+      console.error("Error during password reset:", err);
+
+      // Handle different backend error scenarios more specifically
+      if (axios.isAxiosError(err)) {
+        if (err.response?.status === 404) {
+          setError("Email not found. Please check and try again.");
+          toast({
+            title: "Email Not Found",
+            description: "The email you entered does not exist in our records.",
+            variant: "destructive",
+          });
+        } else if (err.response?.status === 400) {
+          setError("Invalid email format.");
+        } else {
+          setError("Something went wrong. Please try again later.");
+        }
+      } else {
+        setError("An unexpected error occurred.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -36,6 +84,8 @@ export const ForgetPassword = () => {
         <p className="text-center mb-6">
           Enter your email below and we’ll send you a reset link.
         </p>
+
+        {error && <p className="text-red-600">{error}</p>}
 
         <div className="w-full max-w-sm">
           <Form {...form}>
@@ -53,12 +103,20 @@ export const ForgetPassword = () => {
                   </FormItem>
                 )}
               />
-              <Button className="w-full mt-3" type="submit">
-                Send Reset Link
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? (
+                  <span className="flex justify-center items-center gap-3">
+                    Sending Email...{" "}
+                    <Loader size={20} className="animate-spin" />
+                  </span>
+                ) : (
+                  "Send Reset Link"
+                )}
               </Button>
             </form>
           </Form>
         </div>
+
         <div className="mt-4 text-center text-sm">
           Don't have an account?{" "}
           <Link href="/sign-up" className="underline">
