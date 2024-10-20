@@ -91,59 +91,60 @@ export const ForgetPassword = () => {
         {error && <p className="text-red-600">{error}</p>}
 
         {!success ? (
-          <div className="w-full max-w-sm">
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-4"
-              >
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="gojo@satoru.jjk" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? (
-                    <span className="flex justify-center items-center gap-3">
-                      Sending Email...{" "}
-                      <Loader size={20} className="animate-spin" />
-                    </span>
-                  ) : (
-                    "Send Reset Link"
-                  )}
-                </Button>
-              </form>
-            </Form>
-          </div>
+          <>
+            <div className="w-full max-w-sm">
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-4"
+                >
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input placeholder="gojo@satoru.jjk" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button type="submit" className="w-full" disabled={loading}>
+                    {loading ? (
+                      <span className="flex justify-center items-center gap-3">
+                        Sending Email...{" "}
+                        <Loader size={20} className="animate-spin" />
+                      </span>
+                    ) : (
+                      "Send Reset Link"
+                    )}
+                  </Button>
+                </form>
+              </Form>
+            </div>
+            <div className="mt-4 text-center text-sm">
+              Don't have an account?{" "}
+              <Link href="/sign-up" className="underline">
+                Sign up here
+              </Link>
+            </div>
+          </>
         ) : (
           <div className="w-full max-w-sm">
             <Image
               src="/email.gif"
               alt="Email Sent"
               className="w-40 h-40 mx-auto"
-                width={160}
-                height={160}
+              width={160}
+              height={160}
             />
-            <p className="text-green-600">
+            <p className="text-green-600 text-center font-serif font-semibold">
               Email sent successfully! Check your inbox for the reset link.
             </p>
           </div>
         )}
-
-        <div className="mt-4 text-center text-sm">
-          Don't have an account?{" "}
-          <Link href="/sign-up" className="underline">
-            Sign up here
-          </Link>
-        </div>
       </div>
 
       <BackButton />
