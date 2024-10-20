@@ -16,7 +16,7 @@ const app = express(); // 🚀 Initialize Express app
 app.use(
   cors({
     origin: process.env.CLIENT_URL, // 🌐 Allow requests from CLIENT_URL
-    methods: ["GET", "POST", "PUT", "DELETE"], // 🔧 Allowed HTTP methods
+    methods: ["GET", "POST", "PUT", "DELETE" , "PATCH"], // 🔧 Allowed HTTP methods
     allowedHeaders: ["Content-Type", "Authorization"], // 🧰 Allowed headers
     credentials: true, // 🎫 Allow credentials (cookies, headers, etc.)
   })
