@@ -292,9 +292,10 @@ export const resetPassword = catchAsync(async (req, res, next) => {
 
 //! Update password 🛠️
 export const updatePassword = catchAsync(async (req, res, next) => {
-  // 1) Get user from collection
+  // 1️⃣ Extract necessary fields from request body
   const { currentPassword, newPassword, passwordConfirm } = req.body;
 
+  // 2️⃣ Check if all required fields are provided
   if (!currentPassword || !newPassword || !passwordConfirm) {
     return next(
       new AppError(
@@ -303,25 +304,34 @@ export const updatePassword = catchAsync(async (req, res, next) => {
       )
     );
   }
-  const user = await User.findById(req.user._id).select("+password");
 
-  // 2) Check if posted current password is correct
-
-  if (!(await user.comparePassword(currentPassword))) {
-    return next(new AppError("Your current password is wrong.", 401));
+  // 3️⃣ Check if newPassword and passwordConfirm match
+  if (newPassword !== passwordConfirm) {
+    return next(
+      new AppError("New password and confirm password do not match.", 400)
+    );
   }
 
-  // 3) If so, update password
-  user.password = newPassword;
+  // 4️⃣ Get user from the database (including password for comparison)
+  const user = await User.findById(req.user._id).select("+password");
 
+  // 5️⃣ Verify if the current password is correct
+  if (!(await user.comparePassword(currentPassword))) {
+    return next(new AppError("Your current password is incorrect.", 401));
+  }
+
+  // 6️⃣ Update user password and save the updated user
+  user.password = newPassword;
   await user.save();
 
-  // 4) Log user in, send JWT
+  // 7️⃣ Generate a new JWT token for the user
   const token = signToken(user._id);
 
+  // 8️⃣ Respond with success message and the new token
   res.status(200).json({
     status: "success",
     message: "Password updated successfully! 😆",
     token,
   });
 });
+
