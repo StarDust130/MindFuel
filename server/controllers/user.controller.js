@@ -71,17 +71,23 @@ export const updateMe = catchAsync(async (req, res, next) => {
 
 //! Delete User 🗑️
 export const deleteMe = catchAsync(async (req, res, next) => {
-  // 1️⃣ Get the user from the collection
-  const user = await User.findByIdAndUpdate(req.user.id, (user.active = false));
+  // 1️⃣ Set user's active status to false (soft delete)
+  const user = await User.findByIdAndUpdate(
+    req.user.id,
+    { active: false },  // Correctly updating the 'active' field
+    { new: true, runValidators: true }  // Options: return updated user, and validate
+  );
 
-  // 2️⃣ Save the updated user document
-  await user.save();
+  if (!user) {
+    return next(new AppError("User not found", 404));
+  }
 
-  // 3️⃣ Send response
+  // 2️⃣ Send response (No content for delete - 204 status)
   res.status(204).json({
     success: true,
-    message: "User deleted successfully! 🎉",
+    message: "User deactivated successfully! 🎉",
     data: null,
   });
 });
+
 
