@@ -35,3 +35,9 @@ export const loginSchema = z.object({
     .regex(/[0-9]/, "Password must contain at least one number")
     .regex(/[\W_]/, "Password must contain at least one special character"), // e.g., !@#$%
 });
+
+
+// Forget Password schema validation
+export const forgetPasswordSchema = z.object({
+  email: z.string().email("Invalid email address").trim(),
+});
