@@ -19,8 +19,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import Image from "next/image";
-import { ChevronLeft, Loader } from "lucide-react";
+import {  Loader } from "lucide-react";
 import { loginSchema } from "@/utils/formSchema";
+import BackButton from "../elements/BackButton";
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
@@ -162,14 +163,7 @@ const LoginForm = () => {
           alt="login-image"
         />
       </div>
-      <Link href="/">
-        <Button
-          variant={"ghost"}
-          className="absolute top-2 left-0 md:top-5 md:left-5"
-        >
-          <ChevronLeft />
-        </Button>
-      </Link>
+      <BackButton />
     </div>
   );
 };
