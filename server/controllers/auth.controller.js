@@ -244,15 +244,18 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
 
   // 3) Send it to user's email
 
-  const resetURL = `${process.env.CLIENT_URL}://${req.get(
-    "host"
-  )}/api/v1/auth/resetPassword/${resetToken}`;
+ const resetLink = `${process.env.CLIENT_URL}/resetPassword/${resetToken}`;
+
+
+
+  console.log("resetLink:", resetLink);
+  
 
   try {
     await sendEmail({
       email: user.email,
       subject: "Your password reset token (valid for 10 min)",
-      resetURL,
+      resetLink,
     });
 
     res.status(200).json({
