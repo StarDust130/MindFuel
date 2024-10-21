@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/select";
 
 import Image from "next/image";
-import { ChevronLeft, Loader } from "lucide-react";
+import { Loader } from "lucide-react";
 import { registerSchema } from "@/utils/formSchema";
 import BackButton from "@/components/elements/BackButton";
 
@@ -65,7 +65,7 @@ const SignUpForm = () => {
         description: "Have fun learning!",
       });
 
-      router.push("/");
+      router.push("/profile");
     } catch (err) {
       console.error("Error during registration:", err);
 

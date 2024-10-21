@@ -1,7 +1,6 @@
 "use client";
 import axios from "axios";
 import Link from "next/link";
-import Cookies from "js-cookie"; // Import js-cookie
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -55,12 +54,6 @@ const LoginForm = () => {
         { withCredentials: true } // Ensure cookies are sent and received
       );
 
-      //! Get the accessToken if not using HttpOnly cookies
-      const { accessToken } = response.data.data;
-      Cookies.set("accessToken", accessToken, {
-        expires: 1, // 1 day
-      });
-
       toast({
         title: "Login successful 🎉",
         description: "You are now logged in.",
@@ -77,7 +70,7 @@ const LoginForm = () => {
         const backendErrorMessage = err.response.data.message;
 
         if (backendErrorMessage) {
-          errorMessage = backendErrorMessage; 
+          errorMessage = backendErrorMessage;
         }
       }
 
