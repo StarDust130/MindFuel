@@ -17,8 +17,8 @@ const router = express.Router();
 //! Unprotected Routes
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.post("/forgetPassword", forgotPassword);
-router.patch("/resetPassword/:token", resetPassword);
+// router.post("/forgetPassword", forgotPassword);
+// router.patch("/resetPassword/:token", resetPassword);
 
 
 //! Protected Routes

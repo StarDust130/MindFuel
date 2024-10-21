@@ -57,7 +57,8 @@ const SignUpForm = () => {
       // Send the registration request
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/register`,
-        { username, email, password, role }
+        { username, email, password, role },
+        { withCredentials: true } // Add this line to include cookies
       );
 
       toast({
