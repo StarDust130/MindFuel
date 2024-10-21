@@ -3,13 +3,11 @@ import {
   forgotPassword,
   loginUser,
   logoutUser,
-  protectRoute,
   registerUser,
   resetPassword,
-  restrictRoute,
-  Roles,
 } from "../controllers/auth.controller.js";
 import { deleteAll, deleteMe, getAllUsers, updateMe, updatePassword } from "../controllers/user.controller.js";
+import { protectRoute, restrictRoute , Roles } from "../middlewares/auth.middlewares.js";
 
 const router = express.Router();
 
