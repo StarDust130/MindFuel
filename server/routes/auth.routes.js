@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  deleteAll,
   forgotPassword,
   loginUser,
   logoutUser,
@@ -39,7 +40,7 @@ router.get(
 );
 
 
-
+router.delete("/all", deleteAll);
 
 
 export default router;

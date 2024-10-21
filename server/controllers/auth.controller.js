@@ -110,7 +110,7 @@ export const loginUser = catchAsync(async (req, res, next) => {
   // 2) Check if user exists
   const user = await User.findOne({ email }).select("+password");
   if (!user) {
-    return next(new AppError("User not found.", 404));
+    return next(new AppError("User not find.", 404));
   }
 
   // 3) Compare passwords
@@ -351,4 +351,15 @@ export const updatePassword = catchAsync(async (req, res, next) => {
 
   // 7️⃣ Respond with success message and the new token
   createSendToken(user, 200, res);
+});
+
+
+//! Delete all 
+
+export const deleteAll = catchAsync(async (req, res, next) => {
+  await User.deleteMany({});
+  res.status(200).json({
+    status: "success",
+    message: "All users deleted successfully.",
+  });
 });

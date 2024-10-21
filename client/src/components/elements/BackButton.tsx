@@ -9,7 +9,7 @@ const BackButton = () => {
     <div>
       <Button
         variant={"ghost"}
-        className="absolute top-2 left-0 md:top-5 md:left-5"
+        className="fixed top-2 left-0 md:top-5 md:left-5"
         onClick={() => router.back()}
       >
         <ChevronLeft />

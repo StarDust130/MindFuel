@@ -19,10 +19,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import Image from "next/image";
-import {  Loader } from "lucide-react";
+import { Loader } from "lucide-react";
 import { loginSchema } from "@/utils/formSchema";
 import BackButton from "@/components/elements/BackButton";
-
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
@@ -71,15 +70,18 @@ const LoginForm = () => {
     } catch (err) {
       console.error("Login error:", err); // Log error for debugging
 
-      if (
-        axios.isAxiosError(err) &&
-        err.response &&
-        err.response.status === 401
-      ) {
-        setError("Invalid email or password. Please try again.");
-      } else {
-        setError("Something went wrong. Please try again later.");
+      let errorMessage = "Something went wrong. Please try again later."; // Default error message
+
+      if (axios.isAxiosError(err) && err.response && err.response.data) {
+        // Check if the error message is provided in the backend response
+        const backendErrorMessage = err.response.data.message;
+
+        if (backendErrorMessage) {
+          errorMessage = backendErrorMessage; 
+        }
       }
+
+      setError(errorMessage); // Display the extracted error message
     } finally {
       setLoading(false);
     }
