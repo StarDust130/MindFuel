@@ -4,7 +4,6 @@ import { AppError } from "../utils/appError.js";
 import sendEmail from "../utils/email.js";
 import crypto from "crypto";
 import { createSendToken } from "../utils/extras.js";
-import jwt from "jsonwebtoken";
 
 //! Register user 🗒️
 export const registerUser = catchAsync(async (req, res, next) => {
@@ -43,13 +42,14 @@ export const loginUser = catchAsync(async (req, res, next) => {
 
   // 1) Validate required fields
   if (!email || !password) {
-    return next(new AppError("Please provide email and password."));
+    return next(new AppError("Please provide email and password.", 400));
   }
 
   // 2) Check if user exists
   const user = await User.findOne({ email }).select("+password");
   if (!user) {
-    return next(new AppError("User not find.", 404));
+    console.log("User not found.");
+    return next(new AppError("User not found.", 404));
   }
 
   // 3) Compare passwords
@@ -58,9 +58,10 @@ export const loginUser = catchAsync(async (req, res, next) => {
     return next(new AppError("Invalid email or password.", 401));
   }
 
-  // 4)  Send token in cookie and success response
+  // 4) Send token in cookie and success response
   createSendToken(user, "User Login Successfully 🥳", 200, res);
 });
+
 
 //! Logout user 🗒️
 export const logoutUser = catchAsync(async (req, res) => {

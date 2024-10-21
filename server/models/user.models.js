@@ -51,25 +51,19 @@ const userSchema = new mongoose.Schema(
 
 userSchema.index({ email: 1 }); // Create an index on email for faster lookup
 
-//! Hash password before saving to DB
+
+//! (Hash password before saving to DB) & (Update passwordChangedAt property when password is modified)
 userSchema.pre("save", async function (next) {
   // Only hash the password if it has been modified (or is new)
   if (!this.isModified("password")) return next();
 
-  // Hash the password
+  // 1) Hash the password
   this.password = await bcrypt.hash(this.password, 12);
+  // 2) Update passwordChangedAt
+  this.passwordChangedAt = Date.now() - 1000; // Ensure the timestamp is slightly behind
   next();
 });
 
-//! Update passwordChangedAt property when password is modified
-userSchema.pre("save", function (next) {
-  // Only update passwordChangedAt if the password was modified
-  if (!this.isModified("password") || this.isNew) return next();
-
-  // Subtract 1 second to ensure the token is created after the password was changed
-  this.passwordChangedAt = Date.now() - 1000;
-  next();
-});
 
 //! Query Middleware to (exclude inactive users) from all find queries
 userSchema.pre(/^find/ , function(next){

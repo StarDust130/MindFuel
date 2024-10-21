@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { catchAsync } from "../utils/catchAsync.js";
 import { AppError } from "../utils/appError.js";
+import { User } from "../models/user.models.js";
 
 // Load environment variables
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
@@ -9,6 +10,9 @@ const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
 export const protectRoute = catchAsync(async (req, res, next) => {
   // 1) Check if token exists
   const token = req.cookies.accessToken || req.headers.authorization;
+
+  console.log("Token from protect route: ", token);
+  
 
   if (!token) {
     return next(
@@ -19,8 +23,14 @@ export const protectRoute = catchAsync(async (req, res, next) => {
   // 2) Verify token
   const decoded = jwt.verify(token, JWT_SECRET);
 
+  console.log("Decoded token from protect route: ", decoded);
+  
+
   // 3) Check if user still exists
-  const currentUser = await User.findById(decoded._id);
+  const currentUser = await User.findById(decoded.id);
+
+  console.log("Current User from protect route: ", currentUser);
+  
   if (!currentUser) {
     return next(
       new AppError(
