@@ -2,6 +2,7 @@
 import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie"; // Import js-cookie
+import {  EllipsisVertical, Info, Pencil, Trash2 } from "lucide-react";
 
 // Define the User interface for type safety
 interface User {
@@ -11,43 +12,43 @@ interface User {
 }
 
 const Page: React.FC = () => {
- const [users, setUsers] = useState<User[]>([]); // State to store fetched users
- const [loading, setLoading] = useState<boolean>(true); // Loading state
- const [error, setError] = useState<string | null>(null); // Error state
+  const [users, setUsers] = useState<User[]>([]); // State to store fetched users
+  const [loading, setLoading] = useState<boolean>(true); // Loading state
+  const [error, setError] = useState<string | null>(null); // Error state
 
- useEffect(() => {
-   const fetchUsers = async () => {
-     setLoading(true); // Start loading
-     const accessToken = Cookies.get("accessToken"); // Extract accessToken from cookies
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setLoading(true); // Start loading
+      const accessToken = Cookies.get("accessToken"); // Extract accessToken from cookies
 
-     if (!accessToken) {
-       setError("Authorization token not found");
-       setLoading(false); // Stop loading
-       return; // Exit early if token is not found
-     }
+      if (!accessToken) {
+        setError("Authorization token not found");
+        setLoading(false); // Stop loading
+        return; // Exit early if token is not found
+      }
 
-     try {
-       // Fetch users data with axios
-       const response: AxiosResponse<{ data: { users: User[] } }> =
-         await axios.get(`${process.env.NEXT_PUBLIC_API_URL}`, {
-           headers: {
-             Authorization: `Bearer ${accessToken}`,
-           },
-           withCredentials: true, // Ensure cookies are included in the request
-         });
+      try {
+        // Fetch users data with axios
+        const response: AxiosResponse<{ data: { users: User[] } }> =
+          await axios.get(`${process.env.NEXT_PUBLIC_API_URL}`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+            withCredentials: true, // Ensure cookies are included in the request
+          });
 
-       // Set users from response
-       setUsers(response.data.data.users);
-     } catch (err: any) {
-       // Set error message based on error
-       setError(err.response?.data?.message || err.message);
-     } finally {
-       setLoading(false); // Stop loading spinner after request is done
-     }
-   };
+        // Set users from response
+        setUsers(response.data.data.users);
+      } catch (err: any) {
+        // Set error message based on error
+        setError(err.response?.data?.message || err.message);
+      } finally {
+        setLoading(false); // Stop loading spinner after request is done
+      }
+    };
 
-   fetchUsers();
- }, []);
+    fetchUsers();
+  }, []);
   // Handle loading state
   if (loading) return <div className="text-center">Loading...</div>;
 
@@ -63,6 +64,7 @@ const Page: React.FC = () => {
           <tr className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
             <th className="py-3 px-6 text-left">Username</th>
             <th className="py-3 px-6 text-left">Email</th>
+            <th className="py-3 px-6 ">Tools</th>
           </tr>
         </thead>
         <tbody className="text-gray-600 text-sm font-light">
@@ -74,6 +76,13 @@ const Page: React.FC = () => {
               >
                 <td className="py-3 px-6">{user.username}</td>
                 <td className="py-3 px-6">{user.email}</td>
+                <td className="py-3 px-6">
+                  <div className="flex justify-center w-full items-center gap-4 cursor-pointer">
+                    <Info color="orange" />
+                    <Pencil color="green" />
+                    <Trash2 color="red" />
+                  </div>
+                </td>
               </tr>
             ))
           ) : (
