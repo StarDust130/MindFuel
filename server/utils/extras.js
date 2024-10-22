@@ -21,7 +21,7 @@ export const createSendToken = async (user, message, statusCode, res) => {
     httpOnly: false, // More secure by preventing client-side JS access
     secure: process.env.NODE_ENV === "production",
     sameSite: "Lax",
-    maxAge: 15 * 60 * 1000, // 15 minutes for access token
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days for access token
   });
 
   res.cookie("refreshToken", refreshToken, {
