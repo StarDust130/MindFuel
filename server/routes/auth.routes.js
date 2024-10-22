@@ -32,7 +32,7 @@ router.patch("/updateMyPassword", protectRoute, updatePassword);
 router.get(
   "/",
   protectRoute,
-  restrictRoute(Roles.STUDENT),
+  restrictRoute(Roles.ADMIN),
   getAllUsers
 );
 
