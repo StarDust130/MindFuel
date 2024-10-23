@@ -33,7 +33,6 @@ export interface User {
 interface currentID {
   _id: string;
 }
-  
 
 const Page: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]); // State to store fetched users
@@ -204,13 +203,15 @@ const Page: React.FC = () => {
           <h1 className="text-2xl text-center font-bold">Users</h1>
         </div>
 
-        <div className="flex justify-end pl-10 mb-3">
-         <LogoutButton />
+        <div className="flex justify-end items-center pl-10 mb-3">
           <Button onClick={handleDeleteAll}>
             <span className="flex justify-center items-center gap-2 ">
               Delete All <Trash2 size={18} />
             </span>
           </Button>
+          <div className="ml-2">
+            <LogoutButton />
+          </div>
         </div>
 
         <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
