@@ -73,7 +73,7 @@ export const updateMe = catchAsync(async (req, res, next) => {
 export const deleteMe = catchAsync(async (req, res, next) => {
   // 1️⃣ Set user's active status to false (soft delete)
   const user = await User.findByIdAndUpdate(
-    req.user.id,
+    req.user._id,
     { active: false }, // Correctly updating the 'active' field
     { new: true, runValidators: true } // Options: return updated user, and validate
   );
@@ -146,3 +146,48 @@ export const deleteAll = catchAsync(async (req, res, next) => {
     message: "All users deleted successfully. 🍥",
   });
 });
+
+//! Get All User info 🧸
+export const getAllInfo = catchAsync(async (req, res, next) => {
+  try {
+    // 1) Get user ID from request object
+    const userId = req.user._id;
+    
+    // Check if user ID is present
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID not provided",
+      });
+    }
+
+    // 2) Fetch user info from database
+    const user = await User.findById(userId);
+
+    // If user is not found, return error response
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // 3) Send user info in response
+    return res.status(200).json({
+      success: true,
+      message: "User All Info 🪮",
+      user, // Automatically includes the user's info without circular references
+    });
+
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error("Error fetching user info:", error);
+
+    // 4) Return error response
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching user info",
+    });
+  }
+});
+
