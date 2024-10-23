@@ -71,6 +71,41 @@ const Page: React.FC = () => {
       setError(err.response?.data?.message || err.message);
     }
   };
+  // Define error types for better clarity
+  interface AxiosError {
+    response?: {
+      data?: {
+        message?: string;
+      };
+    };
+    message: string;
+  }
+
+  const DeleteUser = async (user: User): Promise<void> => {
+    try {
+      // Send a DELETE request to the API
+      const res = await axios.delete(
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/deleteMe/${user._id}`,
+        {
+          withCredentials: true, // Ensure cookies are included in the request
+        }
+      );
+
+      // Show success toast notification
+      toast({
+        title: `${user.username} deleted successfully`,
+        description: res.data?.message || "User deleted successfully 🔪",
+      });
+
+      // Set users to an empty array (assuming setUsers is in the current scope)
+      setUsers([]);
+    } catch (err: any) {
+      const error = err as AxiosError; // Cast err to AxiosError type
+
+      // Set error message based on the error response
+      setError(error.response?.data?.message || error.message);
+    }
+  };
 
   // Handle loading state
   if (loading) return <div className="text-center">Loading...</div>;
@@ -116,7 +151,7 @@ const Page: React.FC = () => {
                   <div className="flex justify-center w-full items-center gap-4 cursor-pointer">
                     <Info color="orange" />
                     <Pencil color="green" />
-                    <Trash color="red" />
+                    <Trash color="red" onClick={() => DeleteUser(user)} />
                   </div>
                 </td>
               </tr>
