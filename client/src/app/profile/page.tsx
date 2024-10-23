@@ -18,6 +18,7 @@ import {
 import { UserCard } from "@/components/elements/UserCard";
 import BackButton from "@/components/elements/BackButton";
 import LogoutButton from "@/components/elements/Header/LogoutButton";
+import Shorting from "./Shorting";
 
 // Define the User interface for type safety
 export interface User {
@@ -204,6 +205,7 @@ const Page: React.FC = () => {
         </div>
 
         <div className="flex justify-end items-center pl-10 mb-3">
+          <Shorting />
           <Button onClick={handleDeleteAll}>
             <span className="flex justify-center items-center gap-2 ">
               Delete All <Trash2 size={18} />
