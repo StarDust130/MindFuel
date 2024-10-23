@@ -12,7 +12,6 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 
@@ -36,7 +35,6 @@ const Page: React.FC = () => {
   const [editId, setEditId] = useState<string | null>(null); // Edit mode state
   const [editData, setEditData] = useState<Partial<User>>({}); // State to store the current edit data
   const [userInfoData, setUserInfoData] = useState<Partial<User>>({}); // State to store the current edit data
-
   const { toast } = useToast();
   const router = useRouter();
 
@@ -65,6 +63,7 @@ const Page: React.FC = () => {
     fetchUsers();
   }, []);
 
+  //! Get a user info
   const getUserInfo = async (user: User) => {
     try {
       const res = await axios.get(
@@ -137,6 +136,7 @@ const Page: React.FC = () => {
     });
   };
 
+  //! update user
   const updateUser = async () => {
     if (!editId || !editData.username || !editData.email) return;
 
