@@ -188,6 +188,7 @@ const Page: React.FC = () => {
           <tr className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
             <th className="py-3 px-6 text-left">Username</th>
             <th className="py-3 px-6 text-left">Email</th>
+            <th className="py-3  text-center">Role</th>
             <th className="py-3 px-6">Tools</th>
           </tr>
         </thead>
@@ -222,6 +223,18 @@ const Page: React.FC = () => {
                     user.email
                   )}
                 </td>
+                <td
+                  className={`text-center ${
+                    user.role === "admin"
+                      ? "text-red-500 font-bold"
+                      : user.role === "teacher"
+                      ? "text-blue-500 font-semibold"
+                      : ""
+                  }`}
+                >
+                  {user.role}
+                </td>
+
                 <td className="py-3 px-6">
                   <div className="flex justify-center items-center gap-4 cursor-pointer">
                     <Dialog>
