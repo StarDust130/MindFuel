@@ -74,8 +74,8 @@ export const deleteMe = catchAsync(async (req, res, next) => {
   // 1️⃣ Set user's active status to false (soft delete)
   const user = await User.findByIdAndUpdate(
     req.user.id,
-    { active: false },  // Correctly updating the 'active' field
-    { new: true, runValidators: true }  // Options: return updated user, and validate
+    { active: false }, // Correctly updating the 'active' field
+    { new: true, runValidators: true } // Options: return updated user, and validate
   );
 
   if (!user) {
@@ -89,7 +89,6 @@ export const deleteMe = catchAsync(async (req, res, next) => {
     data: null,
   });
 });
-
 
 //! Update password 🛠️
 export const updatePassword = catchAsync(async (req, res, next) => {
@@ -135,9 +134,12 @@ export const updatePassword = catchAsync(async (req, res, next) => {
   createSendToken(user, 200, res);
 });
 
-
-//! Delete all 
+//! Delete all
 export const deleteAll = catchAsync(async (req, res, next) => {
+  // delete cookies
+  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken");
+
   await User.deleteMany({});
   res.status(200).json({
     status: "success",
