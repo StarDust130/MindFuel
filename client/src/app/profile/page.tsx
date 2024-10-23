@@ -18,7 +18,6 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 
-
 // Define the User interface for type safety
 interface User {
   _id: string;
@@ -32,6 +31,7 @@ const Page: React.FC = () => {
   const [error, setError] = useState<string | null>(null); // Error state
   const [editId, setEditId] = useState<string | null>(null); // Edit mode state
   const [editData, setEditData] = useState<Partial<User>>({}); // State to store the current edit data
+  const [userInfoData , setUserInfoData] = useState<Partial<User>>({}); // State to store the current edit data
 
   const { toast } = useToast();
   const router = useRouter();
@@ -61,6 +61,7 @@ const Page: React.FC = () => {
     fetchUsers();
   }, []);
 
+  //! Handle Delete All
   const handleDeleteAll = async () => {
     try {
       const res = await axios.delete(
@@ -83,6 +84,7 @@ const Page: React.FC = () => {
     }
   };
 
+  //! Handle Delete User
   const DeleteUser = async (user: User) => {
     try {
       const res = await axios.delete(
@@ -98,6 +100,19 @@ const Page: React.FC = () => {
       });
 
       setUsers((prevUsers) => prevUsers.filter((u) => u._id !== user._id));
+    } catch (err: any) {
+      setError(err.response?.data?.message || err.message);
+    }
+  };
+
+  const getUserInfo = async (user: User) => {
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/getAllInfo/${user._id}`,
+        {
+          withCredentials: true,
+        }
+      );
     } catch (err: any) {
       setError(err.response?.data?.message || err.message);
     }

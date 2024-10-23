@@ -149,7 +149,9 @@ export const getAllInfo = catchAsync(async (req, res, next) => {
     }
 
     // 2) Fetch user info from database
-    const user = await User.findById(id);
+    const user = await User.findById(id).select("-__v -refreshToken");
+
+    
 
     // If user is not found, return error response
     if (!user) {
