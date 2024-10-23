@@ -1,10 +1,11 @@
 "use client";
 import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
-import { Info, Pencil, Trash, Trash2 } from "lucide-react";
+import { Info, Pencil, Trash, Trash2, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
 
 // Define the User interface for type safety
 interface User {
@@ -17,6 +18,8 @@ const Page: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]); // State to store fetched users
   const [loading, setLoading] = useState<boolean>(true); // Loading state
   const [error, setError] = useState<string | null>(null); // Error state
+  const [editId, setEditId] = useState<string | null>(null); // Edit mode state
+  const [editData, setEditData] = useState<Partial<User>>({}); // State to store the current edit data
   const { toast } = useToast();
   const router = useRouter();
 
@@ -47,44 +50,32 @@ const Page: React.FC = () => {
 
   const handleDeleteAll = async () => {
     try {
-      // Send a DELETE request to the API
       const res = await axios.delete(
         `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/deleteAll`,
         {
-          withCredentials: true, // Ensure cookies are included in the request
+          withCredentials: true,
         }
       );
 
       router.push("/sign-up");
 
       toast({
-        title: "All User Delete ",
-        description: `${
-          res.data?.message || "All User Delete Succesfully 🔪"
-        } `,
+        title: "All Users Deleted",
+        description: res.data?.message || "All users deleted successfully 🔪",
       });
 
-      // Set users to an empty array
       setUsers([]);
     } catch (err: any) {
-      // Set error message based on error
       setError(err.response?.data?.message || err.message);
     }
   };
-  // Define error types for better clarity
-  interface User {
-    _id: string;
-    username: string;
-    email: string;
-  }
 
   const DeleteUser = async (user: User) => {
     try {
-      // Send a DELETE request to the API with the user ID in the URL
       const res = await axios.delete(
-        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/deleteMe/${user._id}`, // Pass the user ID in the URL
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/deleteMe/${user._id}`,
         {
-          withCredentials: true, // Ensure cookies are included in the request
+          withCredentials: true,
         }
       );
 
@@ -93,25 +84,59 @@ const Page: React.FC = () => {
         description: res.data?.message || "User deleted successfully 🔪",
       });
 
-      // Clear the users list or update state accordingly
       setUsers((prevUsers) => prevUsers.filter((u) => u._id !== user._id));
     } catch (err: any) {
-      // Handle errors
       setError(err.response?.data?.message || err.message);
     }
   };
 
-  // Handle loading state
-  if (loading) return <div className="text-center">Loading...</div>;
+  const handleEditClick = (user: User) => {
+    setEditId(user._id); // Set edit mode
+    setEditData(user); // Load current user data into the form
+  };
 
-  // Handle error state
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditData({
+      ...editData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const updateUser = async () => {
+    if (!editId || !editData.username || !editData.email) return;
+
+    try {
+      const res = await axios.patch(
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/updateMe/${editId}`,
+        { username: editData.username, email: editData.email },
+        {
+          withCredentials: true,
+        }
+      );
+
+      toast({
+        title: `${editData.username} updated successfully!`,
+        description: res.data?.message || "User updated successfully 🎉",
+      });
+
+      // Update the user in the UI
+      setUsers((prevUsers) =>
+        prevUsers.map((u) => (u._id === editId ? { ...u, ...editData } : u))
+      );
+
+      setEditId(null); // Exit edit mode
+    } catch (err: any) {
+      setError(err.response?.data?.message || err.message);
+    }
+  };
+
+  if (loading) return <div className="text-center">Loading...</div>;
   if (error)
     return <div className="text-red-600 text-center">Error: {error}</div>;
 
-  // Main UI rendering
   return (
     <div className="overflow-x-auto p-4">
-      <div className="flex justify-center  items-center mb-4">
+      <div className="flex justify-center items-center mb-4">
         <h1 className="text-2xl text-center font-bold">Users</h1>
       </div>
 
@@ -123,13 +148,12 @@ const Page: React.FC = () => {
         </Button>
       </div>
 
-      <div className="w-full  flex items-end justify-end px-20 py-2 cursor-pointer"></div>
       <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
         <thead>
           <tr className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
             <th className="py-3 px-6 text-left">Username</th>
             <th className="py-3 px-6 text-left">Email</th>
-            <th className="py-3 px-6 ">Tools</th>
+            <th className="py-3 px-6">Tools</th>
           </tr>
         </thead>
         <tbody className="text-gray-600 text-sm font-light">
@@ -139,12 +163,41 @@ const Page: React.FC = () => {
                 key={user._id}
                 className="border-b border-gray-200 hover:bg-gray-100 transition duration-150 ease-in-out"
               >
-                <td className="py-3 px-6">{user.username}</td>
-                <td className="py-3 px-6">{user.email}</td>
+                <td className="py-3 px-6">
+                  {editId === user._id ? (
+                    <Input
+                      type="text"
+                      name="username"
+                      value={editData.username || ""}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    user.username
+                  )}
+                </td>
+                <td className="py-3 px-6">
+                  {editId === user._id ? (
+                    <Input
+                      type="email"
+                      name="email"
+                      value={editData.email || ""}
+                      onChange={handleInputChange}
+                    />
+                  ) : (
+                    user.email
+                  )}
+                </td>
                 <td className="py-3 px-6">
                   <div className="flex justify-center w-full items-center gap-4 cursor-pointer">
                     <Info color="orange" />
-                    <Pencil color="green" />
+                    {editId === user._id ? (
+                      <Save color="green" onClick={updateUser} />
+                    ) : (
+                      <Pencil
+                        color="green"
+                        onClick={() => handleEditClick(user)}
+                      />
+                    )}
                     <Trash color="red" onClick={() => DeleteUser(user)} />
                   </div>
                 </td>
@@ -152,7 +205,7 @@ const Page: React.FC = () => {
             ))
           ) : (
             <tr>
-              <td colSpan={2} className="py-3 px-6 text-center">
+              <td colSpan={3} className="py-3 px-6 text-center">
                 No users found.
               </td>
             </tr>

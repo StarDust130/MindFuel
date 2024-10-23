@@ -27,7 +27,12 @@ router.delete(
 );
 
 //! update  user
-router.patch("/updateMe", protectRoute, restrictRoute(Roles.ADMIN), updateMe);
+router.patch(
+  "/updateMe/:id",
+  protectRoute,
+  restrictRoute(Roles.ADMIN),
+  updateMe
+);
 
 
 

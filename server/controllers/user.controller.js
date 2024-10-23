@@ -15,38 +15,28 @@ export const getAllUsers = catchAsync(async (req, res, next) => {
 
 //! Update user data 🛠️
 export const updateMe = catchAsync(async (req, res, next) => {
-  // 1️⃣ Get the user from the collection
-  const user = await User.findById(req.user.id);
+  const { id } = req.params; // Extract user ID from URL parameters
+  const { username, email } = req.body; // Extract the fields to update from the request body
 
-  const { username, email } = req.body;
-
-  // 2️⃣ Validate: If both fields are empty, return an error
-  if (!username && !email) {
-    return res.status(400).json({
+  // 1️⃣ Find the user by ID
+  const user = await User.findById(id);
+  if (!user) {
+    return res.status(404).json({
       success: false,
-      message:
-        "Please provide at least one field to update (username or email).",
+      message: "User not found.",
     });
   }
 
-  // 3️⃣ Update: If username is provided, update username
+  // 2️⃣ Update the username if provided
   if (username) {
     user.username = username;
   }
 
-  // 4️⃣ Update: If email is provided, check for uniqueness
+  // 3️⃣ Update the email if provided and handle uniqueness check
   if (email) {
-    // Prevent user from updating to the same email
-    if (email === user.email) {
-      return res.status(400).json({
-        success: false,
-        message: "New email cannot be the same as the current email.",
-      });
-    }
-
-    // Check if the email is already in use by another user
+    // Check if the new email is already in use by another user
     const existingUser = await User.findOne({ email });
-    if (existingUser && existingUser.id !== req.user.id) {
+    if (existingUser && existingUser._id.toString() !== id) {
       return res.status(400).json({
         success: false,
         message: "This email is already in use by another user.",
@@ -56,16 +46,14 @@ export const updateMe = catchAsync(async (req, res, next) => {
     user.email = email;
   }
 
-  // 5️⃣ Save the updated user document
+  // 4️⃣ Save the updated user
   await user.save();
 
-  // 6️⃣ Send response
+  // 5️⃣ Send success response
   res.status(200).json({
     success: true,
     message: "User updated successfully! 🎉",
-    data: {
-      user,
-    },
+    data: { user },
   });
 });
 
