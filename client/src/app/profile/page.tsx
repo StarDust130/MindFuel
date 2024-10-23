@@ -3,6 +3,8 @@ import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import { Info, Pencil, Trash, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 // Define the User interface for type safety
 interface User {
@@ -15,7 +17,10 @@ const Page: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]); // State to store fetched users
   const [loading, setLoading] = useState<boolean>(true); // Loading state
   const [error, setError] = useState<string | null>(null); // Error state
+  const { toast } = useToast();
+  const router = useRouter();
 
+  //! Fetch users data from the API
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true); // Start loading
@@ -39,6 +44,34 @@ const Page: React.FC = () => {
 
     fetchUsers();
   }, []);
+
+  const handleDeleteAll = async () => {
+    try {
+      // Send a DELETE request to the API
+      const res = await axios.delete(
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/deleteAll`,
+        {
+          withCredentials: true, // Ensure cookies are included in the request
+        }
+      );
+
+      router.push("/register");
+
+      toast({
+        title: "All User Delete ",
+        description: `${
+          res.data?.message || "All User Delete Succesfully 🔪"
+        } `,
+      });
+
+      // Set users to an empty array
+      setUsers([]);
+    } catch (err: any) {
+      // Set error message based on error
+      setError(err.response?.data?.message || err.message);
+    }
+  };
+
   // Handle loading state
   if (loading) return <div className="text-center">Loading...</div>;
 
@@ -54,7 +87,7 @@ const Page: React.FC = () => {
       </div>
 
       <div className="flex justify-end pl-10">
-        <Button>
+        <Button onClick={handleDeleteAll}>
           <span className="flex justify-center items-center gap-2">
             Delete All <Trash2 size={18} />
           </span>

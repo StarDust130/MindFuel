@@ -141,6 +141,6 @@ export const deleteAll = catchAsync(async (req, res, next) => {
   await User.deleteMany({});
   res.status(200).json({
     status: "success",
-    message: "All users deleted successfully.",
+    message: "All users deleted successfully. 🍥",
   });
 });

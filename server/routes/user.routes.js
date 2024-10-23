@@ -20,7 +20,7 @@ router.get(
 );
 
 
-router.delete("/all", deleteAll);
+router.delete("/deleteAll", deleteAll);
 
 
 
