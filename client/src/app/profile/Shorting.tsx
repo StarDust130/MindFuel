@@ -12,7 +12,7 @@ const Shorting = () => {
     <div className="mr-2">
       <Select>
         <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Shorting Role" />
+          <SelectValue placeholder="Role" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All</SelectItem>
