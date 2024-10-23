@@ -72,38 +72,32 @@ const Page: React.FC = () => {
     }
   };
   // Define error types for better clarity
-  interface AxiosError {
-    response?: {
-      data?: {
-        message?: string;
-      };
-    };
-    message: string;
+  interface User {
+    _id: string;
+    username: string;
+    email: string;
   }
 
-  const DeleteUser = async (user: User): Promise<void> => {
+  const DeleteUser = async (user: User) => {
     try {
-      // Send a DELETE request to the API
+      // Send a DELETE request to the API with the user ID in the URL
       const res = await axios.delete(
-        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/deleteMe/${user._id}`,
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/deleteMe/${user._id}`, // Pass the user ID in the URL
         {
           withCredentials: true, // Ensure cookies are included in the request
         }
       );
 
-      // Show success toast notification
       toast({
-        title: `${user.username} deleted successfully`,
+        title: `${user.username} deleted successfully!`,
         description: res.data?.message || "User deleted successfully 🔪",
       });
 
-      // Set users to an empty array (assuming setUsers is in the current scope)
-      setUsers([]);
+      // Clear the users list or update state accordingly
+      setUsers((prevUsers) => prevUsers.filter((u) => u._id !== user._id));
     } catch (err: any) {
-      const error = err as AxiosError; // Cast err to AxiosError type
-
-      // Set error message based on the error response
-      setError(error.response?.data?.message || error.message);
+      // Handle errors
+      setError(err.response?.data?.message || err.message);
     }
   };
 

@@ -70,22 +70,21 @@ export const updateMe = catchAsync(async (req, res, next) => {
 });
 
 //! Delete User 🗑️
-export const deleteMe = catchAsync(async (req, res, next) => {
-  // 1️⃣ Set user's active status to false (soft delete)
-  const user = await User.findByIdAndUpdate(
-    req.user._id,
-    { active: false }, // Correctly updating the 'active' field
-    { new: true, runValidators: true } // Options: return updated user, and validate
-  );
+export const deleteUserById = catchAsync(async (req, res, next) => {
+  // Get the user ID from URL parameters
+  const { id } = req.params;
+
+  // 1️⃣ Find and delete the user by their ID
+  const user = await User.findByIdAndDelete(id);
 
   if (!user) {
     return next(new AppError("User not found", 404));
   }
 
   // 2️⃣ Send response (No content for delete - 204 status)
-  res.status(204).json({
+  res.status(200).json({
     success: true,
-    message: "User deactivated successfully! 🎉",
+    message: "User deleted successfully! 🎉",
     data: null,
   });
 });
@@ -152,7 +151,7 @@ export const getAllInfo = catchAsync(async (req, res, next) => {
   try {
     // 1) Get user ID from request object
     const userId = req.user._id;
-    
+
     // Check if user ID is present
     if (!userId) {
       return res.status(400).json({
@@ -178,7 +177,6 @@ export const getAllInfo = catchAsync(async (req, res, next) => {
       message: "User All Info 🪮",
       user, // Automatically includes the user's info without circular references
     });
-
   } catch (error) {
     // Log the error for debugging purposes
     console.error("Error fetching user info:", error);
@@ -190,4 +188,3 @@ export const getAllInfo = catchAsync(async (req, res, next) => {
     });
   }
 });
-

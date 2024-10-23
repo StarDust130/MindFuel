@@ -6,7 +6,7 @@ import {
   registerUser,
   resetPassword,
 } from "../controllers/auth.controller.js";
-import { deleteAll, deleteMe, getAllUsers, updateMe, updatePassword } from "../controllers/user.controller.js";
+import { deleteAll, getAllUsers, updateMe, updatePassword } from "../controllers/user.controller.js";
 import { protectRoute  } from "../middlewares/auth.middlewares.js";
 
 const router = express.Router();
@@ -22,7 +22,7 @@ router.post("/login", loginUser);
 //! Protected Routes
 router.get("/logout" , protectRoute , logoutUser);
 router.patch("/updateMe", protectRoute, updateMe);
-router.delete("/deleteMe", protectRoute, deleteMe);
+
 
 
 //! user Routes

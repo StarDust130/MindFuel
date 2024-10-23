@@ -6,7 +6,7 @@ import {
 } from "../middlewares/auth.middlewares.js";
 import {
   deleteAll,
-  deleteMe,
+  deleteUserById,
   getAllInfo,
   getAllUsers,
   updateMe,
@@ -30,8 +30,15 @@ router.delete(
 router.patch("/updateMe", protectRoute, restrictRoute(Roles.ADMIN), updateMe);
 
 
+
 //! delete user
-router.delete("/deleteMe", protectRoute, restrictRoute(Roles.ADMIN), deleteMe);
+router.delete(
+  "/deleteMe/:id",
+  protectRoute,
+  restrictRoute(Roles.ADMIN),
+  deleteUserById
+);
+
 
 
 
