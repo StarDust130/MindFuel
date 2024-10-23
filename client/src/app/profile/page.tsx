@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/dialog";
 
 import { UserCard } from "@/components/elements/UserCard";
+import BackButton from "@/components/elements/BackButton";
+import LogoutButton from "@/components/elements/Header/LogoutButton";
 
 // Define the User interface for type safety
 export interface User {
@@ -196,125 +198,129 @@ const Page: React.FC = () => {
     return <div className="text-red-600 text-center">Error: {error}</div>;
 
   return (
-    <div className="overflow-x-auto p-4">
-      <div className="flex justify-center items-center mb-4">
-        <h1 className="text-2xl text-center font-bold">Users</h1>
-      </div>
+    <>
+      <div className="overflow-x-auto p-4">
+        <div className="flex justify-center items-center mb-4">
+          <h1 className="text-2xl text-center font-bold">Users</h1>
+        </div>
 
-      <div className="flex justify-end pl-10 mb-3">
-        <Button onClick={handleDeleteAll}>
-          <span className="flex justify-center items-center gap-2 ">
-            Delete All <Trash2 size={18} />
-          </span>
-        </Button>
-      </div>
+        <div className="flex justify-end pl-10 mb-3">
+         <LogoutButton />
+          <Button onClick={handleDeleteAll}>
+            <span className="flex justify-center items-center gap-2 ">
+              Delete All <Trash2 size={18} />
+            </span>
+          </Button>
+        </div>
 
-      <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
-        <thead>
-          <tr className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
-            <th className="py-3 px-6 text-left">Username</th>
-            <th className="py-3 px-6 text-left">Email</th>
-            <th className="py-3  text-center">Role</th>
-            <th className="py-3 px-6">Tools</th>
-          </tr>
-        </thead>
-        <tbody className="text-gray-600 text-sm font-light">
-          {users.length > 0 ? (
-            users.map((user) => (
-              <tr
-                key={user._id}
-                className="border-b border-gray-200 hover:bg-gray-100 transition duration-150 ease-in-out"
-              >
-                <td
-                  className={`py-3 px-6 ${
-                    currentUser?._id === user._id
-                      ? "text-red-500 font-bold"
-                      : ""
-                  }`}
+        <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
+          <thead>
+            <tr className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
+              <th className="py-3 px-6 text-left">Username</th>
+              <th className="py-3 px-6 text-left">Email</th>
+              <th className="py-3  text-center">Role</th>
+              <th className="py-3 px-6">Tools</th>
+            </tr>
+          </thead>
+          <tbody className="text-gray-600 text-sm font-light">
+            {users.length > 0 ? (
+              users.map((user) => (
+                <tr
+                  key={user._id}
+                  className="border-b border-gray-200 hover:bg-gray-100 transition duration-150 ease-in-out"
                 >
-                  {editId === user._id ? (
-                    <Input
-                      type="text"
-                      name="username"
-                      value={editData.username || ""}
-                      onChange={handleInputChange}
-                    />
-                  ) : (
-                    user.username
-                  )}
-                </td>
-                <td
-                  className={`py-3 px-6 ${
-                    currentUser?._id === user._id
-                      ? "text-red-500  font-bold"
-                      : ""
-                  }`}
-                >
-                  {editId === user._id ? (
-                    <Input
-                      type="email"
-                      name="email"
-                      value={editData.email || ""}
-                      onChange={handleInputChange}
-                    />
-                  ) : (
-                    user.email
-                  )}
-                </td>
-                <td
-                  className={`text-center ${
-                    user.role === "admin"
-                      ? "text-red-500 font-bold"
-                      : user.role === "teacher"
-                      ? "text-blue-500 font-semibold"
-                      : ""
-                  }`}
-                >
-                  {user.role}
-                </td>
-
-                <td className="py-3 px-6">
-                  <div className="flex justify-center items-center gap-4 cursor-pointer">
-                    <Dialog>
-                      <DialogTrigger>
-                        {" "}
-                        <Info
-                          color="orange"
-                          onClick={() => getUserInfo(user)}
-                        />
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogDescription>
-                            <UserCard user={user} />
-                          </DialogDescription>
-                        </DialogHeader>
-                      </DialogContent>
-                    </Dialog>
-
+                  <td
+                    className={`py-3 px-6 ${
+                      currentUser?._id === user._id
+                        ? "text-red-500 font-bold"
+                        : ""
+                    }`}
+                  >
                     {editId === user._id ? (
-                      <Save color="green" onClick={updateUser} />
-                    ) : (
-                      <Pencil
-                        color="green"
-                        onClick={() => handleEditClick(user)}
+                      <Input
+                        type="text"
+                        name="username"
+                        value={editData.username || ""}
+                        onChange={handleInputChange}
                       />
+                    ) : (
+                      user.username
                     )}
-                    <Trash color="red" onClick={() => DeleteUser(user)} />
-                  </div>
+                  </td>
+                  <td
+                    className={`py-3 px-6 ${
+                      currentUser?._id === user._id
+                        ? "text-red-500  font-bold"
+                        : ""
+                    }`}
+                  >
+                    {editId === user._id ? (
+                      <Input
+                        type="email"
+                        name="email"
+                        value={editData.email || ""}
+                        onChange={handleInputChange}
+                      />
+                    ) : (
+                      user.email
+                    )}
+                  </td>
+                  <td
+                    className={`text-center ${
+                      user.role === "admin"
+                        ? "text-red-500 font-bold"
+                        : user.role === "teacher"
+                        ? "text-blue-500 font-semibold"
+                        : ""
+                    }`}
+                  >
+                    {user.role}
+                  </td>
+
+                  <td className="py-3 px-6">
+                    <div className="flex justify-center items-center gap-4 cursor-pointer">
+                      <Dialog>
+                        <DialogTrigger>
+                          {" "}
+                          <Info
+                            color="orange"
+                            onClick={() => getUserInfo(user)}
+                          />
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogDescription>
+                              <UserCard user={user} />
+                            </DialogDescription>
+                          </DialogHeader>
+                        </DialogContent>
+                      </Dialog>
+
+                      {editId === user._id ? (
+                        <Save color="green" onClick={updateUser} />
+                      ) : (
+                        <Pencil
+                          color="green"
+                          onClick={() => handleEditClick(user)}
+                        />
+                      )}
+                      <Trash color="red" onClick={() => DeleteUser(user)} />
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={3} className="py-3 px-6 text-center">
+                  No users found.
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={3} className="py-3 px-6 text-center">
-                No users found.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
+            )}
+          </tbody>
+        </table>
+      </div>
+      <BackButton />
+    </>
   );
 };
 

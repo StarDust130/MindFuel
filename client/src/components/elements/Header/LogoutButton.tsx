@@ -1,10 +1,15 @@
 "use client";
+
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { Button } from "../../ui/button";
 import Cookies from "js-cookie"; // Import js-cookie
 
-const LogoutButton: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
+interface LogoutButtonProps {
+  onLogout?: () => void; // Make onLogout optional
+}
+
+const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogout }) => {
   const { toast } = useToast();
   const router = useRouter();
 
@@ -17,7 +22,9 @@ const LogoutButton: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
         title: "Logout successful 🎉",
         description: "You have been logged out.",
       });
-      onLogout(); // Notify parent component to update state
+      if (onLogout) {
+        onLogout(); // Notify parent component if onLogout is provided
+      }
       router.push("/"); // Redirect to the home page
     } else {
       toast({
@@ -28,7 +35,7 @@ const LogoutButton: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
   };
 
   return (
-    <Button onClick={onLogoutClick} variant={"secondary"}>
+    <Button onClick={onLogoutClick} variant="secondary">
       Logout
     </Button>
   );
