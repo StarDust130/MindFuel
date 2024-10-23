@@ -20,6 +20,7 @@ const Page: React.FC = () => {
   const [error, setError] = useState<string | null>(null); // Error state
   const [editId, setEditId] = useState<string | null>(null); // Edit mode state
   const [editData, setEditData] = useState<Partial<User>>({}); // State to store the current edit data
+
   const { toast } = useToast();
   const router = useRouter();
 
@@ -140,9 +141,9 @@ const Page: React.FC = () => {
         <h1 className="text-2xl text-center font-bold">Users</h1>
       </div>
 
-      <div className="flex justify-end pl-10">
+      <div className="flex justify-end pl-10 mb-3">
         <Button onClick={handleDeleteAll}>
-          <span className="flex justify-center items-center gap-2">
+          <span className="flex justify-center items-center gap-2 ">
             Delete All <Trash2 size={18} />
           </span>
         </Button>
