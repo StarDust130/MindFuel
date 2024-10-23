@@ -48,6 +48,11 @@ router.delete(
 
 
 //! getAllInfo
-router.get("/getAllInfo", protectRoute, restrictRoute(Roles.ADMIN), getAllInfo);
+router.get(
+  "/getAllInfo/:id",
+  protectRoute,
+  restrictRoute(Roles.ADMIN),
+  getAllInfo
+);
 
 export default router;

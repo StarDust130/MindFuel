@@ -138,10 +138,10 @@ export const deleteAll = catchAsync(async (req, res, next) => {
 export const getAllInfo = catchAsync(async (req, res, next) => {
   try {
     // 1) Get user ID from request object
-    const userId = req.user._id;
+    const {id} = req.params;
 
     // Check if user ID is present
-    if (!userId) {
+    if (!id) {
       return res.status(400).json({
         success: false,
         message: "User ID not provided",
@@ -149,7 +149,7 @@ export const getAllInfo = catchAsync(async (req, res, next) => {
     }
 
     // 2) Fetch user info from database
-    const user = await User.findById(userId);
+    const user = await User.findById(id);
 
     // If user is not found, return error response
     if (!user) {
