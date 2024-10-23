@@ -7,6 +7,18 @@ import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+
+
 // Define the User interface for type safety
 interface User {
   _id: string;
@@ -190,7 +202,27 @@ const Page: React.FC = () => {
                 </td>
                 <td className="py-3 px-6">
                   <div className="flex justify-center w-full items-center gap-4 cursor-pointer">
-                    <Info color="orange" />
+                    <Drawer>
+                      <DrawerTrigger>
+                        {" "}
+                        <Info color="orange" />
+                      </DrawerTrigger>
+                      <DrawerContent>
+                        <DrawerHeader>
+                          <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+                          <DrawerDescription>
+                            This action cannot be undone.
+                          </DrawerDescription>
+                        </DrawerHeader>
+                        <DrawerFooter>
+                          <Button>Submit</Button>
+                          <DrawerClose>
+                            <Button variant="outline">Cancel</Button>
+                          </DrawerClose>
+                        </DrawerFooter>
+                      </DrawerContent>
+                    </Drawer>
+
                     {editId === user._id ? (
                       <Save color="green" onClick={updateUser} />
                     ) : (
