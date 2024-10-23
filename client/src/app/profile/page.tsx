@@ -55,7 +55,7 @@ const Page: React.FC = () => {
         }
       );
 
-      router.push("/register");
+      router.push("/sign-up");
 
       toast({
         title: "All User Delete ",
