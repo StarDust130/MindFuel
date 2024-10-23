@@ -28,16 +28,6 @@ router.delete("/deleteMe", protectRoute, deleteMe);
 //! user Routes
 router.patch("/updateMyPassword", protectRoute, updatePassword);
 
-//!  Admin Routes
-router.get(
-  "/",
-  protectRoute,
-  restrictRoute(Roles.ADMIN),
-  getAllUsers
-);
-
-
-router.delete("/all", deleteAll);
 
 
 export default router;

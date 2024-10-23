@@ -2,8 +2,11 @@ import jwt from "jsonwebtoken";
 
 // Load environment variables
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "15m"; // Short expiration for access token
-const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || "90d"; // Longer expiration for refresh token
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d"; 
+const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || "90d"; 
+
+console.log("JWT_EXPIRES_IN 🐽", JWT_EXPIRES_IN);
+
 
 //! Sign JWT Token with user ID
 export const signToken = (id, expiresIn) => {

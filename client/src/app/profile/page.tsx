@@ -2,7 +2,8 @@
 import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie"; // Import js-cookie
-import {  EllipsisVertical, Info, Pencil, Trash2 } from "lucide-react";
+import { EllipsisVertical, Info, Pencil, Trash, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 // Define the User interface for type safety
 interface User {
@@ -59,6 +60,19 @@ const Page: React.FC = () => {
   // Main UI rendering
   return (
     <div className="overflow-x-auto p-4">
+      <div className="flex justify-center  items-center mb-4">
+        <h1 className="text-2xl text-center font-bold">Users</h1>
+      </div>
+
+      <div className="flex justify-end pl-10">
+        <Button>
+          <span className="flex justify-center items-center gap-2">
+            Delete All <Trash2 size={18} />
+          </span>
+        </Button>
+      </div>
+
+      <div className="w-full  flex items-end justify-end px-20 py-2 cursor-pointer"></div>
       <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
         <thead>
           <tr className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
@@ -80,7 +94,7 @@ const Page: React.FC = () => {
                   <div className="flex justify-center w-full items-center gap-4 cursor-pointer">
                     <Info color="orange" />
                     <Pencil color="green" />
-                    <Trash2 color="red" />
+                    <Trash color="red" />
                   </div>
                 </td>
               </tr>
