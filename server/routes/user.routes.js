@@ -9,6 +9,7 @@ import {
   deleteUserById,
   getAllInfo,
   getAllUsers,
+  getUserById,
   updateMe,
 } from "../controllers/user.controller.js";
 
@@ -53,6 +54,15 @@ router.get(
   protectRoute,
   restrictRoute(Roles.ADMIN),
   getAllInfo
+);
+
+
+//! getAllInfo
+router.get(
+  "/getUserById",
+  protectRoute,
+  restrictRoute(Roles.ADMIN),
+  getUserById
 );
 
 export default router;

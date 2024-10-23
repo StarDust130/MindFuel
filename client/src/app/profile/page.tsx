@@ -28,6 +28,11 @@ export interface User {
   passwordChangedAt?: string;
 }
 
+interface currentID {
+  _id: string;
+}
+  
+
 const Page: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]); // State to store fetched users
   const [loading, setLoading] = useState<boolean>(true); // Loading state
@@ -35,6 +40,8 @@ const Page: React.FC = () => {
   const [editId, setEditId] = useState<string | null>(null); // Edit mode state
   const [editData, setEditData] = useState<Partial<User>>({}); // State to store the current edit data
   const [userInfoData, setUserInfoData] = useState<Partial<User>>({}); // State to store the current edit data
+  let [currentUser, setCurrentUser] = useState<currentID | null>(null);
+
   const { toast } = useToast();
   const router = useRouter();
 
@@ -61,6 +68,25 @@ const Page: React.FC = () => {
     };
 
     fetchUsers();
+  }, []);
+
+  //! Get current user ID
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/getUserById`,
+          {
+            withCredentials: true,
+          }
+        );
+        setCurrentUser(res.data.userID);
+      } catch (err: any) {
+        setError(err.response?.data?.message || err.message);
+      }
+    };
+
+    fetchCurrentUser();
   }, []);
 
   //! Get a user info
@@ -199,7 +225,13 @@ const Page: React.FC = () => {
                 key={user._id}
                 className="border-b border-gray-200 hover:bg-gray-100 transition duration-150 ease-in-out"
               >
-                <td className="py-3 px-6">
+                <td
+                  className={`py-3 px-6 ${
+                    currentUser?._id === user._id
+                      ? "text-red-500 font-bold"
+                      : ""
+                  }`}
+                >
                   {editId === user._id ? (
                     <Input
                       type="text"
@@ -211,7 +243,13 @@ const Page: React.FC = () => {
                     user.username
                   )}
                 </td>
-                <td className="py-3 px-6">
+                <td
+                  className={`py-3 px-6 ${
+                    currentUser?._id === user._id
+                      ? "text-red-500  font-bold"
+                      : ""
+                  }`}
+                >
                   {editId === user._id ? (
                     <Input
                       type="email"

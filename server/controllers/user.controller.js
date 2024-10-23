@@ -3,7 +3,19 @@ import { catchAsync } from "../utils/catchAsync.js";
 
 //! Get All users
 export const getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find();
+  const queryObj = { ...req.query };
+  const excludedFields = ["page", "sort", "limit", "fields"];
+
+  // Remove fields from query
+  excludedFields.forEach((el) => delete queryObj[el]);
+
+  // 1️⃣ Build the query
+  const query = await User.find(queryObj);
+
+  // 2️⃣ Execute the query
+  const users = await query;
+
+  // 3️⃣  Send response 1️
   res.status(200).json({
     success: true,
     data: {
@@ -138,7 +150,7 @@ export const deleteAll = catchAsync(async (req, res, next) => {
 export const getAllInfo = catchAsync(async (req, res, next) => {
   try {
     // 1) Get user ID from request object
-    const {id} = req.params;
+    const { id } = req.params;
 
     // Check if user ID is present
     if (!id) {
@@ -150,8 +162,6 @@ export const getAllInfo = catchAsync(async (req, res, next) => {
 
     // 2) Fetch user info from database
     const user = await User.findById(id).select("-__v -refreshToken");
-
-    
 
     // If user is not found, return error response
     if (!user) {
@@ -177,4 +187,34 @@ export const getAllInfo = catchAsync(async (req, res, next) => {
       message: "An error occurred while fetching user info",
     });
   }
+});
+
+//! Get User by ID 🆔
+export const getUserById = catchAsync(async (req, res, next) => {
+  // Get the user ID from URL parameters
+  console.log("req.user  🍦", req.user);
+  const { _id } = req.user; 
+
+  
+
+  // 1️⃣ Find the user by ID
+  const userID = await User.findById(_id);
+
+  console.log("userID 🧁", userID);
+  
+
+  // If user is not found, return error response
+  if (!userID) {
+    return res.status(404).json({
+      success: false,
+      message: "User not found",
+    });
+  }
+
+  // 2️⃣ Send user data in response
+  res.status(200).json({
+    success: true,
+    message: "User found",
+    userID: {_id : userID._id},
+  });
 });
