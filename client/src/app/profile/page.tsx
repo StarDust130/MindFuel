@@ -1,8 +1,7 @@
 "use client";
 import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
-import Cookies from "js-cookie"; // Import js-cookie
-import { EllipsisVertical, Info, Pencil, Trash, Trash2 } from "lucide-react";
+import { Info, Pencil, Trash, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 // Define the User interface for type safety
@@ -20,21 +19,11 @@ const Page: React.FC = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true); // Start loading
-      const accessToken = Cookies.get("accessToken"); // Extract accessToken from cookies
-
-      if (!accessToken) {
-        setError("Authorization token not found");
-        setLoading(false); // Stop loading
-        return; // Exit early if token is not found
-      }
 
       try {
         // Fetch users data with axios
         const response: AxiosResponse<{ data: { users: User[] } }> =
-          await axios.get(`${process.env.NEXT_PUBLIC_API_URL}`, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
+          await axios.get(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}`, {
             withCredentials: true, // Ensure cookies are included in the request
           });
 

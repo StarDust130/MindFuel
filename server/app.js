@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/auth.routes.js"; // 🛠️ Import auth routes
+import userRoutes from "./routes/user.routes.js"; // 🧑‍🦳 Import user routes
 import { AppError } from "./utils/appError.js"; // 🚨 Custom AppError class
 import { globalErrorHandler } from "./controllers/error.controller.js"; // 🛑 Global error handler
 import cookieParser from "cookie-parser"; // 🍪 Parse cookies
@@ -52,6 +53,7 @@ app.use((err, req, res, next) => {
 
 //! Routes
 app.use("/api/v1/auth", authRoutes); // 🔒 Auth routes
+app.use("/api/v1/user", userRoutes); // 🧑‍🦳 User router
 
 //! 404 Handler
 app.all("*", (req, res, next) => {
