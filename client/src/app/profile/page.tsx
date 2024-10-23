@@ -23,6 +23,10 @@ interface User {
   _id: string;
   username: string;
   email: string;
+  role?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  passwordChangedAt?: string;
 }
 
 const Page: React.FC = () => {
@@ -31,7 +35,7 @@ const Page: React.FC = () => {
   const [error, setError] = useState<string | null>(null); // Error state
   const [editId, setEditId] = useState<string | null>(null); // Edit mode state
   const [editData, setEditData] = useState<Partial<User>>({}); // State to store the current edit data
-  const [userInfoData , setUserInfoData] = useState<Partial<User>>({}); // State to store the current edit data
+  const [userInfoData, setUserInfoData] = useState<Partial<User>>({}); // State to store the current edit data
 
   const { toast } = useToast();
   const router = useRouter();
@@ -60,6 +64,20 @@ const Page: React.FC = () => {
 
     fetchUsers();
   }, []);
+
+  const getUserInfo = async (user: User) => {
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/getAllInfo/${user._id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      setUserInfoData(res.data.user);
+    } catch (err: any) {
+      setError(err.response?.data?.message || err.message);
+    }
+  };
 
   //! Handle Delete All
   const handleDeleteAll = async () => {
@@ -105,24 +123,13 @@ const Page: React.FC = () => {
     }
   };
 
-  const getUserInfo = async (user: User) => {
-    try {
-      const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/getAllInfo/${user._id}`,
-        {
-          withCredentials: true,
-        }
-      );
-    } catch (err: any) {
-      setError(err.response?.data?.message || err.message);
-    }
-  };
-
+  //! handleEditClick
   const handleEditClick = (user: User) => {
     setEditId(user._id); // Set edit mode
     setEditData(user); // Load current user data into the form
   };
 
+  //! handleInputChange
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditData({
       ...editData,
@@ -220,13 +227,14 @@ const Page: React.FC = () => {
                     <Drawer>
                       <DrawerTrigger>
                         {" "}
-                        <Info color="orange" />
+                        <Info color="orange" onClick={() => getUserInfo(user)} />
                       </DrawerTrigger>
                       <DrawerContent>
                         <DrawerHeader>
                           <DrawerTitle>Are you absolutely sure?</DrawerTitle>
                           <DrawerDescription>
-                            This action cannot be undone.
+                            {userInfoData._id}
+                            {userInfoData.username}
                           </DrawerDescription>
                         </DrawerHeader>
                         <DrawerFooter>
