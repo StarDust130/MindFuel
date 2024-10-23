@@ -8,18 +8,18 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 
 import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+import { UserCard } from "@/components/elements/UserCard";
 
 // Define the User interface for type safety
-interface User {
+export interface User {
   _id: string;
   username: string;
   email: string;
@@ -223,28 +223,23 @@ const Page: React.FC = () => {
                   )}
                 </td>
                 <td className="py-3 px-6">
-                  <div className="flex justify-center w-full items-center gap-4 cursor-pointer">
-                    <Drawer>
-                      <DrawerTrigger>
+                  <div className="flex justify-center items-center gap-4 cursor-pointer">
+                    <Dialog>
+                      <DialogTrigger>
                         {" "}
-                        <Info color="orange" onClick={() => getUserInfo(user)} />
-                      </DrawerTrigger>
-                      <DrawerContent>
-                        <DrawerHeader>
-                          <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-                          <DrawerDescription>
-                            {userInfoData._id}
-                            {userInfoData.username}
-                          </DrawerDescription>
-                        </DrawerHeader>
-                        <DrawerFooter>
-                          <Button>Submit</Button>
-                          <DrawerClose>
-                            <Button variant="outline">Cancel</Button>
-                          </DrawerClose>
-                        </DrawerFooter>
-                      </DrawerContent>
-                    </Drawer>
+                        <Info
+                          color="orange"
+                          onClick={() => getUserInfo(user)}
+                        />
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogDescription>
+                            <UserCard user={user} />
+                          </DialogDescription>
+                        </DialogHeader>
+                      </DialogContent>
+                    </Dialog>
 
                     {editId === user._id ? (
                       <Save color="green" onClick={updateUser} />
