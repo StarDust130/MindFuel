@@ -27,7 +27,7 @@ export const Actions: React.FC<ActionsProps> = ({
   DeleteUser,
 }) => {
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center justify-center space-x-2">
       <Dialog>
         <DialogTrigger>
           <Info className="cursor-pointer" onClick={() => getUserInfo(user)} />
