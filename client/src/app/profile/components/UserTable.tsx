@@ -51,7 +51,7 @@ export const UserTable: React.FC<UserTableProps> = ({
               >
                 <td
                   className={`py-3 px-6 ${
-                    editId === user._id ? "text-gray-500 font-bold" : ""
+                    editId === user._id ? "text-red-500 font-bold" : ""
                   }`}
                 >
                   {editId === user._id ? (
@@ -67,7 +67,7 @@ export const UserTable: React.FC<UserTableProps> = ({
                 </td>
                 <td
                   className={`py-3 px-6 ${
-                    editId === user._id ? "text-gray-500 font-bold" : ""
+                    editId === user._id ? "text-red-500 font-bold" : ""
                   }`}
                 >
                   {editId === user._id ? (
@@ -81,7 +81,15 @@ export const UserTable: React.FC<UserTableProps> = ({
                     user.email
                   )}
                 </td>
-                <td className="text-center">
+                <td
+                  className={`text-center ${
+                    user.role === "admin"
+                      ? "text-red-500 font-bold"
+                      : user.role === "teacher"
+                      ? "text-green-500 font-semibold"
+                      : ""
+                  }`}
+                >
                   {user.role === "admin"
                     ? "Admin"
                     : user.role === "teacher"
