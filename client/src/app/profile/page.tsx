@@ -22,6 +22,7 @@ const Page: React.FC = () => {
   const { toast } = useToast();
   const router = useRouter();
 
+  //! Fetch all users on initial render
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
@@ -43,6 +44,7 @@ const Page: React.FC = () => {
     fetchUsers();
   }, [role]);
 
+  //! Delete all users
   const handleDeleteAll = async () => {
     try {
       await axios.delete(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}/deleteAll`, {
@@ -59,6 +61,7 @@ const Page: React.FC = () => {
     }
   };
 
+  //! Delete a single user
   const handleDeleteUser = async (user: User) => {
     try {
       await axios.delete(
@@ -77,6 +80,7 @@ const Page: React.FC = () => {
     }
   };
 
+  //! Update user
   const updateUser = async () => {
     if (editId) {
       try {
@@ -107,6 +111,7 @@ const Page: React.FC = () => {
     }
   };
 
+  //! Handle edit click
   const handleEditClick = (user: User) => {
     setEditId(user._id); // Set the ID of the user being edited
     setEditData(user); // Set the user data for editing
