@@ -1,4 +1,5 @@
 "use client";
+
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -6,8 +7,6 @@ import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import BackButton from "@/components/elements/BackButton";
 import LogoutButton from "@/components/elements/Header/LogoutButton";
-
-import { Trash2 } from "lucide-react";
 import Filter from "./components/Filter";
 import Shorting from "./components/Shorting";
 import { UserTable } from "./components/UserTable";
@@ -18,13 +17,11 @@ const Page: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [editId, setEditId] = useState<string | null>(null);
   const [editData, setEditData] = useState<Partial<User>>({});
-  const [currentUser, setCurrentUser] = useState<string | null>(null);
   const [role, setRole] = useState<string>("");
 
   const { toast } = useToast();
   const router = useRouter();
 
-  //! Fetch all users
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
@@ -46,7 +43,6 @@ const Page: React.FC = () => {
     fetchUsers();
   }, [role]);
 
-  //! Delete all users
   const handleDeleteAll = async () => {
     try {
       await axios.delete(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}/deleteAll`, {
@@ -63,16 +59,15 @@ const Page: React.FC = () => {
     }
   };
 
-  //! Delete single user
-  const handleDeleteUser = async (id: string) => {
+  const handleDeleteUser = async (user: User) => {
     try {
       await axios.delete(
-        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/deleteMe/${id}`,
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/deleteMe/${user._id}`,
         {
           withCredentials: true,
         }
       );
-      setUsers(users.filter((user) => user._id !== id));
+      setUsers(users.filter((u) => u._id !== user._id));
       toast({
         title: "User Deleted",
         description: "User deleted successfully 🔪",
@@ -80,6 +75,41 @@ const Page: React.FC = () => {
     } catch (err: any) {
       console.error(err.message);
     }
+  };
+
+  const updateUser = async () => {
+    if (editId) {
+      try {
+        await axios.patch(
+          `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/updateMe/${editId}`,
+          editData,
+          { withCredentials: true }
+        );
+        toast({
+          title: "User Updated",
+          description: "User updated successfully ✅",
+        });
+        // Reset edit state after updating
+        setEditId(null);
+        setEditData({});
+        // Re-fetch users to reflect changes
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_ADMIN_API_URL}`,
+          {
+            params: { role },
+            withCredentials: true,
+          }
+        );
+        setUsers(response.data.data.users);
+      } catch (err: any) {
+        console.error(err.message);
+      }
+    }
+  };
+
+  const handleEditClick = (user: User) => {
+    setEditId(user._id); // Set the ID of the user being edited
+    setEditData(user); // Set the user data for editing
   };
 
   return (
@@ -104,14 +134,13 @@ const Page: React.FC = () => {
         loading={loading}
         editId={editId}
         editData={editData}
-        currentUser={currentUser}
         onInputChange={(e) =>
           setEditData({ ...editData, [e.target.name]: e.target.value })
         }
-        handleEditClick={setEditId}
+        handleEditClick={handleEditClick}
         getUserInfo={(user) => console.log("Get user info for", user)}
-        updateUser={() => console.log("Update user")}
-        DeleteUser={handleDeleteUser}
+        updateUser={updateUser}
+        DeleteUser={handleDeleteUser} // Corrected prop name
       />
 
       <BackButton />

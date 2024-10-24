@@ -6,20 +6,18 @@ interface UserTableProps {
   users: User[];
   editId: string | null;
   editData: Partial<User>;
-  currentUser: string | null;
   loading: boolean;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleEditClick: (user: User) => void;
   getUserInfo: (user: User) => void;
   updateUser: () => void;
-  DeleteUser: (user: User) => void;
+  DeleteUser: (user: User) => void; // This accepts a User object
 }
 
 export const UserTable: React.FC<UserTableProps> = ({
   users,
   editId,
   editData,
-  currentUser,
   loading,
   onInputChange,
   handleEditClick,
@@ -53,7 +51,7 @@ export const UserTable: React.FC<UserTableProps> = ({
               >
                 <td
                   className={`py-3 px-6 ${
-                    currentUser === user._id ? "text-red-500 font-bold" : ""
+                    editId === user._id ? "text-red-500 font-bold" : ""
                   }`}
                 >
                   {editId === user._id ? (
@@ -69,7 +67,7 @@ export const UserTable: React.FC<UserTableProps> = ({
                 </td>
                 <td
                   className={`py-3 px-6 ${
-                    currentUser === user._id ? "text-red-500 font-bold" : ""
+                    editId === user._id ? "text-red-500 font-bold" : ""
                   }`}
                 >
                   {editId === user._id ? (
@@ -88,9 +86,8 @@ export const UserTable: React.FC<UserTableProps> = ({
                     ? "Admin"
                     : user.role === "teacher"
                     ? "Teacher"
-                    : "student"}
+                    : "Student"}
                 </td>
-
                 <td className="py-3 px-6">
                   <Actions
                     user={user}
