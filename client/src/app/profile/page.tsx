@@ -69,7 +69,7 @@ const Page: React.FC = () => {
         <h1 className="text-2xl text-center font-bold">Users</h1>
       </div>
 
-      <div className="flex justify-end items-center pl-10 mb-3">
+      <div className="flex justify-end gap-3 mr-5 items-center pl-10 mb-3">
         <Filter />
         <Shorting role={role} setRole={setRole} />
         <Button size={"sm"} onClick={handleDeleteAll}>
