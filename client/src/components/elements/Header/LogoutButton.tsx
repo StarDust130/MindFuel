@@ -7,11 +7,13 @@ import Cookies from "js-cookie"; // Import js-cookie
 
 interface LogoutButtonProps {
   onLogout?: () => void; // Make onLogout optional
+  size?: "default" | "sm" | "lg" | "icon" | null
 }
 
-const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogout }) => {
+const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogout, size }) => {
   const { toast } = useToast();
   const router = useRouter();
+  size = size || "default";
 
   const onLogoutClick = async (): Promise<void> => {
     Cookies.remove("accessToken");
@@ -35,7 +37,7 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogout }) => {
   };
 
   return (
-    <Button onClick={onLogoutClick} variant="secondary">
+    <Button size={size} onClick={onLogoutClick} variant="secondary">
       Logout
     </Button>
   );

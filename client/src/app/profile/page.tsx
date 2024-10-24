@@ -24,6 +24,7 @@ const Page: React.FC = () => {
   const { toast } = useToast();
   const router = useRouter();
 
+  //! Fetch all users
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
@@ -45,6 +46,7 @@ const Page: React.FC = () => {
     fetchUsers();
   }, [role]);
 
+  //! Delete all users
   const handleDeleteAll = async () => {
     try {
       await axios.delete(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}/deleteAll`, {
@@ -63,19 +65,19 @@ const Page: React.FC = () => {
 
   return (
     <>
-      <div className="flex justify-center items-center mb-4">
+      <div className="flex justify-center items-center mb-4 mt-2">
         <h1 className="text-2xl text-center font-bold">Users</h1>
       </div>
 
       <div className="flex justify-end items-center pl-10 mb-3">
         <Filter />
         <Shorting role={role} setRole={setRole} />
-        <Button onClick={handleDeleteAll}>
+        <Button size={"sm"} onClick={handleDeleteAll}>
           <span className="flex justify-center items-center gap-2">
-            Delete All <Trash2 size={18} />
+            Delete All
           </span>
         </Button>
-        <LogoutButton  />
+        <LogoutButton size={"sm"} />
       </div>
 
       <UserTable
