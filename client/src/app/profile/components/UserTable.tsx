@@ -88,7 +88,7 @@ export const UserTable: React.FC<UserTableProps> = ({
                     ? "Admin"
                     : user.role === "teacher"
                     ? "Teacher"
-                    : "User"}
+                    : "student"}
                 </td>
 
                 <td className="py-3 px-6">

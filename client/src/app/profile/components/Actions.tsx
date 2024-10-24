@@ -27,6 +27,9 @@ export const Actions: React.FC<ActionsProps> = ({
   updateUser,
   DeleteUser,
 }) => {
+
+    console.log("ActionsProps", user , editId);
+    
   return (
     <div className="flex justify-center items-center gap-4">
       <Dialog>
