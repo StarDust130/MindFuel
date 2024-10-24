@@ -112,10 +112,18 @@ const Page: React.FC = () => {
   };
 
   //! Handle edit click
-  const handleEditClick = (user: User) => {
-    setEditId(user._id); // Set the ID of the user being edited
-    setEditData(user); // Set the user data for editing
-  };
+ const handleEditClick = (user: User) => {
+   if (editId === user._id) {
+     // If the user being edited is clicked again, exit edit mode
+     setEditId(null);
+     setEditData({});
+   } else {
+     // Otherwise, enter edit mode for the clicked user
+     setEditId(user._id);
+     setEditData(user);
+   }
+ };
+
 
   return (
     <>

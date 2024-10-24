@@ -1,4 +1,4 @@
-import { Info, Pencil, Save, Trash } from "lucide-react";
+import { Info, Pencil, Save, Trash, X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -44,6 +44,7 @@ export const Actions: React.FC<ActionsProps> = ({
       {editId === user._id ? (
         <>
           <Save className="cursor-pointer" onClick={updateUser} />
+          <X className="cursor-pointer" onClick={() => handleEditClick(user)} />
         </>
       ) : (
         <>
