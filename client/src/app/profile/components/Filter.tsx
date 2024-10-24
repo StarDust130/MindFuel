@@ -13,8 +13,10 @@ interface FilterProps {
 
 const Filter = ({ short, setShort }: FilterProps) => {
   const handleShorting = (value: string) => {
-    let sortValue = ""; // default: no sorting
+    setShort(value); // Set the selected value to display in the Select trigger
 
+    // Apply sorting logic
+    let sortValue = ""; // default: no sorting
     switch (value) {
       case "new":
         sortValue = "-createdAt"; // Newest first
@@ -33,14 +35,15 @@ const Filter = ({ short, setShort }: FilterProps) => {
         break;
     }
 
-    setShort(sortValue); // Update the sorting based on selection
+    // You can handle the actual sort logic here or wherever needed
   };
 
   return (
     <div className="mr-2">
       <Select value={short} onValueChange={handleShorting}>
         <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Sorting" />
+          <SelectValue placeholder="Shorting" />
+          {/* Show the selected option */}
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All Users</SelectItem>
