@@ -63,6 +63,25 @@ const Page: React.FC = () => {
     }
   };
 
+  //! Delete single user
+  const handleDeleteUser = async (id: string) => {
+    try {
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/deleteMe/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      setUsers(users.filter((user) => user._id !== id));
+      toast({
+        title: "User Deleted",
+        description: "User deleted successfully 🔪",
+      });
+    } catch (err: any) {
+      console.error(err.message);
+    }
+  };
+
   return (
     <>
       <div className="flex justify-center items-center mb-4 mt-2">
@@ -92,7 +111,7 @@ const Page: React.FC = () => {
         handleEditClick={setEditId}
         getUserInfo={(user) => console.log("Get user info for", user)}
         updateUser={() => console.log("Update user")}
-        DeleteUser={(user) => console.log("Delete user", user)}
+        DeleteUser={handleDeleteUser}
       />
 
       <BackButton />

@@ -27,8 +27,6 @@ export const Actions: React.FC<ActionsProps> = ({
   updateUser,
   DeleteUser,
 }) => {
-
-    console.log("ActionsProps", user , editId);
     
   return (
     <div className="flex justify-center items-center gap-4">
@@ -51,7 +49,7 @@ export const Actions: React.FC<ActionsProps> = ({
         <Pencil color="blue" onClick={() => handleEditClick(user)} />
       )}
 
-      <Trash color="red" onClick={() => DeleteUser(user)} />
+      <Trash color="red" onClick={() => DeleteUser(user._id)} />
     </div>
   );
 };
