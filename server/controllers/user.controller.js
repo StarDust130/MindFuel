@@ -3,19 +3,20 @@ import { catchAsync } from "../utils/catchAsync.js";
 
 //! Get All users
 export const getAllUsers = catchAsync(async (req, res, next) => {
-  const queryObj = { ...req.query };
-  const excludedFields = ["page", "sort", "limit", "fields"];
-
-  // Remove fields from query
-  excludedFields.forEach((el) => delete queryObj[el]);
+  const { role, page, sort, limit, fields, ...filters } = req.query; // Destructure and exclude pagination-related fields
 
   // 1️⃣ Build the query
-  const query = await User.find(queryObj);
+  const queryObj = { ...filters };
+
+  // If role is provided, add it to the query object
+  if (role) {
+    queryObj.role = role;
+  }
 
   // 2️⃣ Execute the query
-  const users = await query;
+  const users = await User.find(queryObj);
 
-  // 3️⃣  Send response 1️
+  // 3️⃣ Send response
   res.status(200).json({
     success: true,
     data: {
@@ -24,6 +25,7 @@ export const getAllUsers = catchAsync(async (req, res, next) => {
     },
   });
 });
+
 
 //! Update user data 🛠️
 export const updateMe = catchAsync(async (req, res, next) => {
@@ -193,15 +195,12 @@ export const getAllInfo = catchAsync(async (req, res, next) => {
 export const getUserById = catchAsync(async (req, res, next) => {
   // Get the user ID from URL parameters
   console.log("req.user  🍦", req.user);
-  const { _id } = req.user; 
-
-  
+  const { _id } = req.user;
 
   // 1️⃣ Find the user by ID
   const userID = await User.findById(_id);
 
   console.log("userID 🧁", userID);
-  
 
   // If user is not found, return error response
   if (!userID) {
@@ -215,6 +214,6 @@ export const getUserById = catchAsync(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "User found",
-    userID: {_id : userID._id},
+    userID: { _id: userID._id },
   });
 });
