@@ -11,9 +11,9 @@ interface ShortingProps {
   setRole: (role: string) => void;
 }
 
-const Shorting = ({ role, setRole }: ShortingProps) => {
+const RoleShorting = ({ role, setRole }: ShortingProps) => {
   const handleRoleChange = (value: string) => {
-    if(value === "all") value = "";
+    if (value === "all") value = "";
     setRole(value); // Update role based on selection
   };
 
@@ -34,4 +34,4 @@ const Shorting = ({ role, setRole }: ShortingProps) => {
   );
 };
 
-export default Shorting;
+export default RoleShorting;

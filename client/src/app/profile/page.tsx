@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import BackButton from "@/components/elements/BackButton";
 import LogoutButton from "@/components/elements/Header/LogoutButton";
 import Filter from "./components/Filter";
-import Shorting from "./components/Shorting";
+import RoleShorting from "./components/RoleShorting";
 import { UserTable } from "./components/UserTable";
 import { User } from "@/types/userTypes";
 
@@ -18,31 +18,41 @@ const Page: React.FC = () => {
   const [editId, setEditId] = useState<string | null>(null);
   const [editData, setEditData] = useState<Partial<User>>({});
   const [role, setRole] = useState<string>("");
+  const [short, setShort] = useState<string>("");
 
   const { toast } = useToast();
   const router = useRouter();
 
-  //! Fetch all users on initial render
-  useEffect(() => {
-    const fetchUsers = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_ADMIN_API_URL}`,
-          {
-            params: { role },
-            withCredentials: true,
-          }
-        );
-        setUsers(response.data.data.users);
-      } catch (err: any) {
-        console.error(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUsers();
-  }, [role]);
+useEffect(() => {
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
+      console.log(
+        "Fetching users from:",
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}`
+      );
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_ADMIN_API_URL}`,
+        {
+          params: {
+            role: role || undefined, // Send role only if it is set
+            sort: short, // Send sorting as 'sort' not 'short'
+          },
+          withCredentials: true,
+        }
+      );
+      console.log("API response:", response.data);
+      setUsers(response.data.data.users);
+    } catch (err: any) {
+      console.error("API Error:", err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchUsers();
+}, [role, short]);
+
+
 
   //! Delete all users
   const handleDeleteAll = async () => {
@@ -112,18 +122,17 @@ const Page: React.FC = () => {
   };
 
   //! Handle edit click
- const handleEditClick = (user: User) => {
-   if (editId === user._id) {
-     // If the user being edited is clicked again, exit edit mode
-     setEditId(null);
-     setEditData({});
-   } else {
-     // Otherwise, enter edit mode for the clicked user
-     setEditId(user._id);
-     setEditData(user);
-   }
- };
-
+  const handleEditClick = (user: User) => {
+    if (editId === user._id) {
+      // If the user being edited is clicked again, exit edit mode
+      setEditId(null);
+      setEditData({});
+    } else {
+      // Otherwise, enter edit mode for the clicked user
+      setEditId(user._id);
+      setEditData(user);
+    }
+  };
 
   return (
     <>
@@ -132,8 +141,8 @@ const Page: React.FC = () => {
       </div>
 
       <div className="flex justify-end gap-3 mr-5 items-center pl-10 mb-3">
-        <Filter />
-        <Shorting role={role} setRole={setRole} />
+        <Filter short={short} setShort={setShort} />
+        <RoleShorting role={role} setRole={setRole} />
         <Button size={"sm"} onClick={handleDeleteAll}>
           <span className="flex justify-center items-center gap-2">
             Delete All

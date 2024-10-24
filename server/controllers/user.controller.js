@@ -3,20 +3,55 @@ import { catchAsync } from "../utils/catchAsync.js";
 
 //! Get All users
 export const getAllUsers = catchAsync(async (req, res, next) => {
-  const { role, page, sort, limit, fields, ...filters } = req.query; // Destructure and exclude pagination-related fields
+  const { role, page = 1, sort, limit = 10, fields, ...filters } = req.query;
 
   // 1️⃣ Build the query
   const queryObj = { ...filters };
 
-  // If role is provided, add it to the query object
-  if (role) {
+  // If role is provided and not an empty string, add it to the query object
+  if (role && role !== "") {
     queryObj.role = role;
   }
 
-  // 2️⃣ Execute the query
-  const users = await User.find(queryObj);
+  // 2️⃣ Handle sorting
+  let sortBy = "";
 
-  // 3️⃣ Send response
+  // Check if the sort query parameter is provided
+  if (sort) {
+    // Split the sort parameter by comma and build the sortBy string
+    sortBy = sort.split(",").join(" ");
+
+    // Add validation for sorting fields
+    const allowedSortFields = ["username", "createdAt"];
+    const sortFields = sortBy.split(" ");
+
+    // Validate each field to prevent injection
+    sortFields.forEach((field) => {
+      const isAscending = field.startsWith("-") ? false : true;
+      const fieldName = isAscending ? field : field.substring(1); // Remove '-' for descending
+
+      // Check if fieldName is allowed for sorting
+      if (!allowedSortFields.includes(fieldName)) {
+        return next(new AppError(`Invalid sorting field: ${fieldName}`, 400));
+      }
+    });
+  } else {
+    // Default sorting by createdAt in descending order
+    sortBy = "-createdAt";
+  }
+
+  // 3️⃣ Convert limit and page to numbers for pagination
+  const pageNum = parseInt(page, 10);
+  const limitNum = parseInt(limit, 10);
+  const skip = (pageNum - 1) * limitNum;
+
+  // 4️⃣ Execute the query with sorting, limit, and skip (pagination)
+  const users = await User.find(queryObj)
+    .sort(sortBy)
+    .limit(limitNum)
+    .skip(skip);
+
+  // 5️⃣ Send response
   res.status(200).json({
     success: true,
     data: {
@@ -25,6 +60,7 @@ export const getAllUsers = catchAsync(async (req, res, next) => {
     },
   });
 });
+
 
 
 //! Update user data 🛠️
