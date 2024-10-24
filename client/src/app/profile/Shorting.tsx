@@ -6,11 +6,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+interface ShortingProps {
+  role: string;
+  setRole: (role: string) => void;
+}
 
-const Shorting = () => {
+const Shorting = ({ role, setRole }: ShortingProps) => {
+  const handleRoleChange = (value: string) => {
+    if(value === "all") value = "";
+    setRole(value); // Update role based on selection
+  };
+
   return (
     <div className="mr-2">
-      <Select>
+      <Select onValueChange={handleRoleChange} value={role}>
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Role" />
         </SelectTrigger>
@@ -24,4 +33,5 @@ const Shorting = () => {
     </div>
   );
 };
+
 export default Shorting;

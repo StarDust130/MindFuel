@@ -21,7 +21,6 @@ import LogoutButton from "@/components/elements/Header/LogoutButton";
 import Shorting from "./Shorting";
 import Filter from "./Filter";
 
-// Define the User interface for type safety
 export interface User {
   _id: string;
   username: string;
@@ -29,77 +28,62 @@ export interface User {
   role?: string;
   createdAt?: string;
   updatedAt?: string;
-  passwordChangedAt?: string;
-}
-
-interface currentID {
-  _id: string;
 }
 
 const Page: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]); // State to store fetched users
-  const [loading, setLoading] = useState<boolean>(true); // Loading state
-  const [error, setError] = useState<string | null>(null); // Error state
-  const [editId, setEditId] = useState<string | null>(null); // Edit mode state
-  const [editData, setEditData] = useState<Partial<User>>({}); // State to store the current edit data
-  const [userInfoData, setUserInfoData] = useState<Partial<User>>({}); // State to store the current edit data
-  let [currentUser, setCurrentUser] = useState<currentID | null>(null);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [editData, setEditData] = useState<Partial<User>>({});
+  const [userInfoData, setUserInfoData] = useState<Partial<User>>({});
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
+  const [role, setRole] = useState<string>("");
 
   const { toast } = useToast();
   const router = useRouter();
 
-  //! Fetch users data from the API
   useEffect(() => {
     const fetchUsers = async () => {
-      setLoading(true); // Start loading
-
+      setLoading(true);
       try {
-        // Fetch users data with axios
         const response: AxiosResponse<{ data: { users: User[] } }> =
           await axios.get(`${process.env.NEXT_PUBLIC_ADMIN_API_URL}`, {
-            withCredentials: true, // Ensure cookies are included in the request
+            params: { role },
+            withCredentials: true,
           });
-
-        // Set users from response
+          console.log(response.data.data.users);
+          
         setUsers(response.data.data.users);
       } catch (err: any) {
-        // Set error message based on error
         setError(err.response?.data?.message || err.message);
       } finally {
-        setLoading(false); // Stop loading spinner after request is done
+        setLoading(false);
       }
     };
-
     fetchUsers();
-  }, []);
+  }, [role]);
 
-  //! Get current user ID
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
         const res = await axios.get(
           `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/getUserById`,
-          {
-            withCredentials: true,
-          }
+          { withCredentials: true }
         );
         setCurrentUser(res.data.userID);
       } catch (err: any) {
         setError(err.response?.data?.message || err.message);
       }
     };
-
     fetchCurrentUser();
   }, []);
 
-  //! Get a user info
   const getUserInfo = async (user: User) => {
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/getAllInfo/${user._id}`,
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
       setUserInfoData(res.data.user);
     } catch (err: any) {
@@ -107,57 +91,44 @@ const Page: React.FC = () => {
     }
   };
 
-  //! Handle Delete All
   const handleDeleteAll = async () => {
     try {
       const res = await axios.delete(
         `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/deleteAll`,
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
-
       router.push("/sign-up");
-
       toast({
         title: "All Users Deleted",
         description: res.data?.message || "All users deleted successfully 🔪",
       });
-
       setUsers([]);
     } catch (err: any) {
       setError(err.response?.data?.message || err.message);
     }
   };
 
-  //! Handle Delete User
   const DeleteUser = async (user: User) => {
     try {
       const res = await axios.delete(
         `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/deleteMe/${user._id}`,
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
-
       toast({
         title: `${user.username} deleted successfully!`,
         description: res.data?.message || "User deleted successfully 🔪",
       });
-
       setUsers((prevUsers) => prevUsers.filter((u) => u._id !== user._id));
     } catch (err: any) {
       setError(err.response?.data?.message || err.message);
     }
   };
 
-  //! handleEditClick
   const handleEditClick = (user: User) => {
-    setEditId(user._id); // Set edit mode
-    setEditData(user); // Load current user data into the form
+    setEditId(user._id);
+    setEditData(user);
   };
 
-  //! handleInputChange
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditData({
       ...editData,
@@ -165,30 +136,22 @@ const Page: React.FC = () => {
     });
   };
 
-  //! update user
   const updateUser = async () => {
     if (!editId || !editData.username || !editData.email) return;
-
     try {
       const res = await axios.patch(
         `${process.env.NEXT_PUBLIC_ADMIN_API_URL}/updateMe/${editId}`,
         { username: editData.username, email: editData.email },
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
-
       toast({
         title: `${editData.username} updated successfully!`,
         description: res.data?.message || "User updated successfully 🎉",
       });
-
-      // Update the user in the UI
       setUsers((prevUsers) =>
         prevUsers.map((u) => (u._id === editId ? { ...u, ...editData } : u))
       );
-
-      setEditId(null); // Exit edit mode
+      setEditId(null);
     } catch (err: any) {
       setError(err.response?.data?.message || err.message);
     }
@@ -207,9 +170,9 @@ const Page: React.FC = () => {
 
         <div className="flex justify-end items-center pl-10 mb-3">
           <Filter />
-          <Shorting />
+          <Shorting role={role} setRole={setRole} />
           <Button onClick={handleDeleteAll}>
-            <span className="flex justify-center items-center gap-2 ">
+            <span className="flex justify-center items-center gap-2">
               Delete All <Trash2 size={18} />
             </span>
           </Button>
@@ -223,7 +186,7 @@ const Page: React.FC = () => {
             <tr className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
               <th className="py-3 px-6 text-left">Username</th>
               <th className="py-3 px-6 text-left">Email</th>
-              <th className="py-3  text-center">Role</th>
+              <th className="py-3 text-center">Role</th>
               <th className="py-3 px-6">Tools</th>
             </tr>
           </thead>
@@ -236,9 +199,7 @@ const Page: React.FC = () => {
                 >
                   <td
                     className={`py-3 px-6 ${
-                      currentUser?._id === user._id
-                        ? "text-red-500 font-bold"
-                        : ""
+                      currentUser === user._id ? "text-red-500 font-bold" : ""
                     }`}
                   >
                     {editId === user._id ? (
@@ -254,9 +215,7 @@ const Page: React.FC = () => {
                   </td>
                   <td
                     className={`py-3 px-6 ${
-                      currentUser?._id === user._id
-                        ? "text-red-500  font-bold"
-                        : ""
+                      currentUser === user._id ? "text-red-500 font-bold" : ""
                     }`}
                   >
                     {editId === user._id ? (
@@ -283,10 +242,9 @@ const Page: React.FC = () => {
                   </td>
 
                   <td className="py-3 px-6">
-                    <div className="flex justify-center items-center gap-4 cursor-pointer">
+                    <div className="flex justify-center items-center gap-4">
                       <Dialog>
                         <DialogTrigger>
-                          {" "}
                           <Info
                             color="orange"
                             onClick={() => getUserInfo(user)}
@@ -305,10 +263,11 @@ const Page: React.FC = () => {
                         <Save color="green" onClick={updateUser} />
                       ) : (
                         <Pencil
-                          color="green"
+                          color="blue"
                           onClick={() => handleEditClick(user)}
                         />
                       )}
+
                       <Trash color="red" onClick={() => DeleteUser(user)} />
                     </div>
                   </td>
@@ -316,7 +275,7 @@ const Page: React.FC = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={3} className="py-3 px-6 text-center">
+                <td colSpan={4} className="text-center py-4 text-gray-500">
                   No users found.
                 </td>
               </tr>
