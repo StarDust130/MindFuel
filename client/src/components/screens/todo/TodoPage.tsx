@@ -7,22 +7,25 @@ import TodoTable from "./TodoTable";
 import TodoFilter from "./TodoFilter";
 import { useToast } from "@/hooks/use-toast";
 
-// Updated Todo interface with `_id` and `createdAt` properties
 interface Todo {
+  title: string;
+  description: string;
+}
+interface Todos {
   _id: string;
   title: string;
   description: string;
-  isCompleted?: boolean;
+  isCompleted: boolean;
   createdAt: string;
   updatedAt?: string;
 }
 
 const TodoPage = () => {
-  const [todo, setTodo] = useState<Omit<Todo, "_id" | "createdAt">>({
+  const [todo, setTodo] = useState<Todo>({
     title: "",
     description: "",
   });
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<Todos[]>([]);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
