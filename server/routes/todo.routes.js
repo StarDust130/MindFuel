@@ -19,7 +19,7 @@ router.post("/", validateTodo, createTodo); //! Create Todo 🐤
 
 router.delete("/:id", deleteTodo); //! delete 🫦
 
-router.patch("/:id", validateTodo, updateTodo); //! Update Todo ↕️
+router.patch("/:id", updateTodo); //! Update Todo ↕️
 
 router.put("/:id", toggleTodo);
 

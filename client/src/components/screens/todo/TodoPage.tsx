@@ -130,6 +130,42 @@ const TodoPage = () => {
     }
   };
 
+  //! Edit Todo 🍪
+  const handleEditTodo = async (
+    id: string,
+    newTitle: string,
+    newDescription: string
+  ) => {
+    try {
+      const response = await axios.patch(
+        `${process.env.NEXT_PUBLIC_TODO_API_URL}/${id}`,
+        { title: newTitle, description: newDescription } // Use new title and description
+      );
+
+      const updatedTodo = response.data.todo;
+
+      setTodos((prevTodos) =>
+        prevTodos.map((todo) =>
+          todo._id === updatedTodo._id ? updatedTodo : todo
+        )
+      );
+
+      toast({
+        title: "Todo Updated 🎉",
+        description: "Todo has been updated successfully.",
+      });
+    } catch (error) {
+      setError("Error updating todo.");
+      console.log(error);
+
+      toast({
+        title: "Error Updating Todo 🚫",
+        description: "An error occurred while updating the todo.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="flex flex-col items-center py-20 h-screen w-full px-10 bg-gray-50">
       <h1 className="text-4xl font-bold text-gray-800 mb-8">Todo List</h1>
@@ -153,6 +189,7 @@ const TodoPage = () => {
         todos={todos}
         handleDeleteTodo={handleDeleteTodo}
         toggleTodo={toggleTodo}
+        handleEditTodo={handleEditTodo}
       />
     </div>
   );

@@ -93,9 +93,10 @@ export const updateTodo = catchAsync(async (req, res, next) => {
   // 5️⃣ Send response with updated todo
   res.status(200).json({
     message: "Todo updated successfully ✨",
-    todo,
+    todo, // Send the updated todo
   });
 });
+
 
 //! Toggle Todo 🐕‍🦺
 export const toggleTodo = catchAsync(async (req, res, next) => {
