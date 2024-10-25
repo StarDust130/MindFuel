@@ -13,7 +13,7 @@ interface TodoCardProps {
   description: string;
   createdAt: string;
   onEdit?: () => void;
-  onDelete?: () => void;
+  handleDeleteTodo?: () => void;
   onToggleComplete?: () => void;
   isCompleted?: boolean;
 }
@@ -23,11 +23,10 @@ const TodoCard = ({
   description,
   createdAt,
   onEdit,
-  onDelete,
+  handleDeleteTodo,
   onToggleComplete,
   isCompleted,
 }: TodoCardProps) => {
-  
   const formattedDate = new Intl.DateTimeFormat("en-IN", {
     year: "numeric",
     month: "long",
@@ -70,7 +69,7 @@ const TodoCard = ({
             className="text-blue-500 cursor-pointer hover:text-blue-600 transition duration-200 ease-in-out"
           />
           <Trash2
-            onClick={onDelete}
+            onClick={handleDeleteTodo}
             className="text-red-500 cursor-pointer hover:text-red-600 transition duration-200 ease-in-out"
           />
         </div>

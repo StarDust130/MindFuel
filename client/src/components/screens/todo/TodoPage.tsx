@@ -1,4 +1,3 @@
-// TodoPage.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -6,6 +5,7 @@ import axios from "axios";
 import TodoInput from "./TodoInput";
 import TodoTable from "./TodoTable";
 import TodoFilter from "./TodoFilter";
+import { useToast } from "@/hooks/use-toast";
 
 // Updated Todo interface with `_id` and `createdAt` properties
 interface Todo {
@@ -24,8 +24,9 @@ const TodoPage = () => {
   });
   const [todos, setTodos] = useState<Todo[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
 
-  // Fetch Todos on Component Mount Only
+  //! Fetch Todos on Component Mount Only 🧁
   useEffect(() => {
     const fetchTodos = async () => {
       try {
@@ -35,9 +36,9 @@ const TodoPage = () => {
         setTodos(response.data.todos);
       } catch (error) {
         if (axios.isAxiosError(error) && error.response?.status === 429) {
-          setError("Too many requests. Please try again later."); //! Display error if request limit is hit
+          setError("Too many requests. Please try again later.");
         } else {
-          setError("Error fetching todos."); //! Display general error if fetch fails
+          setError("Error fetching todos.");
         }
       }
     };
@@ -45,7 +46,7 @@ const TodoPage = () => {
     fetchTodos();
   }, []);
 
-  // Create Todo
+  //! Create Todo 🍰
   const handleAddTodo = async () => {
     if (todo.title.trim() === "") return;
 
@@ -56,11 +57,46 @@ const TodoPage = () => {
       );
 
       if (response.status === 201) {
+        toast({
+          title: "Todo Added 🎉",
+          description: "Todo has been added successfully.",
+        });
         setTodo({ title: "", description: "" });
         setTodos((prevTodos) => [...prevTodos, response.data.todo]);
       }
     } catch (error) {
       setError("Error adding todo.");
+      toast({
+        title: "Error Adding Todo 🚫",
+        description: "An error occurred while adding the todo.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  //! Delete Todo 🍩
+  const handleDeleteTodo = async (id: string) => {
+    try {
+      // Find the title of the todo being deleted
+      const todoToDelete = todos.find((todo) => todo._id === id);
+
+      const response = await axios.delete(
+        `${process.env.NEXT_PUBLIC_TODO_API_URL}/${id}`
+      );
+
+      toast({
+        title: `${todoToDelete?.title || "Todo"} Deleted 🗑️`, // Use title of deleted todo
+        description: "Todo has been deleted successfully.",
+      });
+
+      setTodos((prevTodos) => prevTodos.filter((todo) => todo._id !== id));
+    } catch (error) {
+      setError("Error deleting todo.");
+      toast({
+        title: "Error Deleting Todo 🚫",
+        description: "An error occurred while deleting the todo.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -83,7 +119,7 @@ const TodoPage = () => {
         <TodoFilter />
       </div>
       {/* Todo List */}
-      <TodoTable todos={todos} />
+      <TodoTable todos={todos} handleDeleteTodo={handleDeleteTodo} />
     </div>
   );
 };
