@@ -1,4 +1,3 @@
-
 import {
   Card,
   CardContent,
@@ -8,22 +7,31 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-const TodoCard = () => {
+interface TodoCardProps {
+  todos: {
+    title: string;
+    description: string;
+  };
+}
+
+const TodoCard = ({ todos }: TodoCardProps) => {
   return (
     <div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Card Title</CardTitle>
-          <CardDescription>Card Description</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p>Card Content</p>
-        </CardContent>
-        <CardFooter>
-          <p>Card Footer</p>
-        </CardFooter>
-      </Card>
+      {todos.map((todo) => (
+        <Card>
+          <CardHeader>
+            <CardTitle>{todo.title}</CardTitle>
+            <CardDescription>{todo.description}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p>Card Content</p>
+          </CardContent>
+          <CardFooter>
+            <p>Card Footer</p>
+          </CardFooter>
+        </Card>
+      ))}
     </div>
   );
-}
-export default TodoCard
+};
+export default TodoCard;

@@ -2,12 +2,40 @@
 import TodoInput from "./TodoInput"; // Separate client component
 import TodoTable from "./TodoTable"; // Server component
 import TodoFilter from "./TodoFilter"; // Server component
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+
+//  "isCompleted": false,
+//             "_id": "671b3de927052fe52aea6910",
+//             "title": "Demon Slayer is best",
+//             "description": "Hello BOi from Lord babu",
+//             "createdAt": "2024-10-25T06:42:49.184Z",
+//             "updatedAt": "2024-10-25T07:21:58.853Z",
+//             "__v": 0
+// this my todo object that i get from the server
 
 const TodoPage = () => {
   const [todo, setTodo] = useState({ title: "", description: "" });
+  const [todos, setTodos] = useState([]);
 
+  //! Get Todos 🍦
+  useEffect(() => {
+    const fetchTodos = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_TODO_API_URL}`
+        );
+        setTodos(response.data.todos);
+        console.log(" Todo response", response.data.todos);
+      } catch (error) {
+        console.error("Error fetching todos:", error);
+      }
+    };
+
+    fetchTodos();
+  }, [todo , todos]);
+
+  //! Create Todo 🍨
   const handleAddTodo = async () => {
     if (todo.title.trim() === "") return;
 
@@ -30,6 +58,7 @@ const TodoPage = () => {
       console.error("Error adding todo:", error);
     }
   };
+
   return (
     <div className="flex flex-col py-20 items-center h-screen w-full px-10">
       <h1 className="text-center text-4xl font-bold">Todo</h1>
@@ -48,7 +77,7 @@ const TodoPage = () => {
         <TodoFilter />
       </div>
 
-      <TodoTable />
+      <TodoTable todos={todos} />
     </div>
   );
 };
