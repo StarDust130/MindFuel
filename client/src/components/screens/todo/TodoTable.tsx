@@ -6,7 +6,7 @@ interface TodoTableProps {
 
 const TodoTable = ({ todos }: TodoTableProps) => {
   return (
-    <div className="grid gap-4 mt-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full">
+    <div className="grid gap-4 mt-6 pb-10  px-20 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full">
       {todos.map((todo) => (
         <TodoCard
           key={todo._id}
