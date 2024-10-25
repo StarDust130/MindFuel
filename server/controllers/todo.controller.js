@@ -8,7 +8,7 @@ export const getAllTodo = catchAsync(async (req, res) => {
   const todos = await Todo.find({});
 
   // 2) Response send
-  res.status(201).json({
+  res.status(200).json({
     length: todos.length,
     message: "All users get Sucessfully 🥳",
     todos,
@@ -17,12 +17,9 @@ export const getAllTodo = catchAsync(async (req, res) => {
 
 //! Create todo
 export const createTodo = catchAsync(async (req, res, next) => {
-  // 1) Get data from req
+  // 1️) Get data from req
   const { title, description } = req.body;
 
-  if (!title) {
-    return next(new AppError("Please provide an title", 400));
-  }
 
   // 2) Save it DB
   const todo = await Todo.create({ title, description });
@@ -33,3 +30,8 @@ export const createTodo = catchAsync(async (req, res, next) => {
     todo,
   });
 });
+
+//! Get todo by ID
+export const getTodoById = catchAsync(async (req, res, next) => {
+
+})
