@@ -80,9 +80,7 @@ const TodoPage = () => {
       // Find the title of the todo being deleted
       const todoToDelete = todos.find((todo) => todo._id === id);
 
-      const response = await axios.delete(
-        `${process.env.NEXT_PUBLIC_TODO_API_URL}/${id}`
-      );
+      await axios.delete(`${process.env.NEXT_PUBLIC_TODO_API_URL}/${id}`);
 
       toast({
         title: `${todoToDelete?.title || "Todo"} Deleted 🗑️`, // Use title of deleted todo
