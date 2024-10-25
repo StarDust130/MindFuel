@@ -8,30 +8,27 @@ import {
 } from "@/components/ui/card";
 
 interface TodoCardProps {
-  todos: {
-    title: string;
-    description: string;
-  };
+  title: string;
+  description: string;
 }
 
-const TodoCard = ({ todos }: TodoCardProps) => {
+const TodoCard = ({ title, description }: TodoCardProps) => {
   return (
-    <div>
-      {todos.map((todo) => (
-        <Card>
-          <CardHeader>
-            <CardTitle>{todo.title}</CardTitle>
-            <CardDescription>{todo.description}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p>Card Content</p>
-          </CardContent>
-          <CardFooter>
-            <p>Card Footer</p>
-          </CardFooter>
-        </Card>
-      ))}
-    </div>
+    <Card className="border border-gray-300 shadow-md hover:shadow-lg transition-shadow">
+      <CardHeader>
+        <CardTitle className="text-xl font-semibold">{title}</CardTitle>
+        <CardDescription className="text-gray-600">
+          {description}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm text-gray-500">Additional details here...</p>
+      </CardContent>
+      <CardFooter>
+        <p className="text-xs text-gray-400">Last updated recently</p>
+      </CardFooter>
+    </Card>
   );
 };
+
 export default TodoCard;

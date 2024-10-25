@@ -9,21 +9,27 @@ interface TodoInputProps {
 
 const TodoInput = ({ todo, setTodo, handleAddTodo }: TodoInputProps) => {
   return (
-    <>
+    <div className="flex flex-col gap-2">
       <Input
         placeholder="Add Title"
         value={todo.title}
         onChange={(e) => setTodo({ ...todo, title: e.target.value })}
+        className="border border-gray-300 p-2 rounded"
       />
       <Input
         placeholder="Add Description"
         value={todo.description}
         onChange={(e) => setTodo({ ...todo, description: e.target.value })}
+        className="border border-gray-300 p-2 rounded"
       />
-      <Button onClick={handleAddTodo} variant={"default"}>
+      <Button
+        onClick={handleAddTodo}
+        variant="default"
+        className="mt-2 "
+      >
         Add Todo
       </Button>
-    </>
+    </div>
   );
 };
 

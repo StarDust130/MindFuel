@@ -1,24 +1,30 @@
+// TodoPage.tsx
 "use client";
-import TodoInput from "./TodoInput"; // Separate client component
-import TodoTable from "./TodoTable"; // Server component
-import TodoFilter from "./TodoFilter"; // Server component
+
 import { useEffect, useState } from "react";
 import axios from "axios";
+import TodoInput from "./TodoInput";
+import TodoTable from "./TodoTable";
+import TodoFilter from "./TodoFilter";
 
-//  "isCompleted": false,
-//             "_id": "671b3de927052fe52aea6910",
-//             "title": "Demon Slayer is best",
-//             "description": "Hello BOi from Lord babu",
-//             "createdAt": "2024-10-25T06:42:49.184Z",
-//             "updatedAt": "2024-10-25T07:21:58.853Z",
-//             "__v": 0
-// this my todo object that i get from the server
+// Updated Todo interface with `_id` and other properties
+interface Todo {
+  _id: string;
+  title: string;
+  description: string;
+  isCompleted?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
 
 const TodoPage = () => {
-  const [todo, setTodo] = useState({ title: "", description: "" });
-  const [todos, setTodos] = useState([]);
+  const [todo, setTodo] = useState<Omit<Todo, "_id">>({
+    title: "",
+    description: "",
+  });
+  const [todos, setTodos] = useState<Todo[]>([]);
 
-  //! Get Todos 🍦
+  //! Fetch Todos on Component Mount Only
   useEffect(() => {
     const fetchTodos = async () => {
       try {
@@ -26,16 +32,20 @@ const TodoPage = () => {
           `${process.env.NEXT_PUBLIC_TODO_API_URL}`
         );
         setTodos(response.data.todos);
-        console.log(" Todo response", response.data.todos);
+        console.log("Fetched todos:", response.data.todos);
       } catch (error) {
-        console.error("Error fetching todos:", error);
+        if (axios.isAxiosError(error) && error.response?.status === 429) {
+          console.error("Too many requests. Please try again later.");
+        } else {
+          console.error("Error fetching todos:", error);
+        }
       }
     };
 
     fetchTodos();
-  }, [todo , todos]);
+  }, []); // Only run on mount
 
-  //! Create Todo 🍨
+  //! Create Todo
   const handleAddTodo = async () => {
     if (todo.title.trim() === "") return;
 
@@ -47,10 +57,11 @@ const TodoPage = () => {
           description: todo.description,
         }
       );
-      console.log("response", response);
 
       if (response.status === 201) {
-        setTodo({ title: "", description: "" }); // Clear input if successfully added
+        setTodo({ title: "", description: "" }); // Clear input after adding
+        // Optimistically update the todos list
+        setTodos((prevTodos) => [...prevTodos, response.data.todo]);
       } else {
         console.error("Failed to add todo");
       }
@@ -60,23 +71,24 @@ const TodoPage = () => {
   };
 
   return (
-    <div className="flex flex-col py-20 items-center h-screen w-full px-10">
-      <h1 className="text-center text-4xl font-bold">Todo</h1>
+    <div className="flex flex-col items-center py-20 h-screen w-full px-10 bg-gray-50">
+      <h1 className="text-4xl font-bold text-gray-800 mb-8">Todo List</h1>
 
-      {/* Add Todo Input and Button as a Client Component */}
-      <div className="flex justify-center items-center w-1/2 gap-2 mt-3">
+      {/* Todo Input */}
+      <div className="w-1/2 mb-6">
         <TodoInput
           todo={todo}
           setTodo={setTodo}
           handleAddTodo={handleAddTodo}
-        />{" "}
-        {/* Client Component */}
+        />
       </div>
 
-      <div className="flex items-center justify-end w-full">
+      {/* Todo Filter */}
+      <div className="w-full flex justify-end mb-4">
         <TodoFilter />
       </div>
 
+      {/* Todo List */}
       <TodoTable todos={todos} />
     </div>
   );
