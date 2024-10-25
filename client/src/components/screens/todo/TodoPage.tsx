@@ -75,7 +75,7 @@ const TodoPage = () => {
       <h1 className="text-4xl font-bold text-gray-800 mb-8">Todo List</h1>
 
       {/* Todo Input */}
-      <div className="w-1/2 mb-6">
+      <div className="md:w-1/2 w-full  mb-6">
         <TodoInput
           todo={todo}
           setTodo={setTodo}
