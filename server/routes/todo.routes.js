@@ -4,6 +4,7 @@ import {
   deleteTodo,
   getAllTodo,
   getTodoById,
+  updateTodo,
 } from "../controllers/todo.controller.js";
 import { validateTodo } from "../middlewares/todo.middlewares.js";
 
@@ -15,7 +16,7 @@ router.get("/:id", getTodoById); //! GEt by 🆔
 
 router.post("/", validateTodo, createTodo); //! Create Todo 🐤
 
-router.delete("/:id", validateTodo, deleteTodo); //! delete 🫦
+router.delete("/:id", deleteTodo); //! delete 🫦
 
 router.patch("/:id", validateTodo, updateTodo); //! Update Todo ↕️
 

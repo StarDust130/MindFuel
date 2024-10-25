@@ -68,7 +68,33 @@ export const deleteTodo = catchAsync(async (req, res, next) => {
 });
 
 
-//! Update todo
-export const updateTodo = catchAsync(async (req, res , next) => {
-    
-})
+//! Update Todo 📝
+export const updateTodo = catchAsync(async (req, res, next) => {
+  // 1️⃣ Get ID from request parameters
+  const { id } = req.params;
+
+  // 2️⃣ Extract fields to update from request body
+  const { title, description } = req.body;
+
+  // 3️⃣ Find and update the todo (use PATCH for partial update)
+  const todo = await Todo.findByIdAndUpdate(
+    id,
+    { title, description },
+    {
+      new: true, // Return the updated document
+      runValidators: true, // Validate updated fields
+    }
+  );
+
+  // 4️⃣ Check if todo was found and updated
+  if (!todo) {
+    return next(new AppError("Todo not found", 404));
+  }
+
+  // 5️⃣ Send response with updated todo
+  res.status(200).json({
+    message: "Todo updated successfully ✨",
+    todo,
+  });
+});
+
