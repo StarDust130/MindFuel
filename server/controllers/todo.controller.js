@@ -67,7 +67,6 @@ export const deleteTodo = catchAsync(async (req, res, next) => {
   });
 });
 
-
 //! Update Todo 📝
 export const updateTodo = catchAsync(async (req, res, next) => {
   // 1️⃣ Get ID from request parameters
@@ -95,6 +94,27 @@ export const updateTodo = catchAsync(async (req, res, next) => {
   res.status(200).json({
     message: "Todo updated successfully ✨",
     todo,
+  });
+});
+
+//! Toggle Todo 🐕‍🦺
+export const toggleTodo = catchAsync(async (req, res, next) => {
+  // 1) Find the todo and toggle its isCompleted status
+  const todo = await User.findById(req.params.id);
+
+  // If the todo does not exist, return an error
+  if (!todo) {
+    return res.status(404).json({ message: "Todo not found" });
+  }
+
+  // Toggle the isCompleted status
+  todo.isCompleted = !todo.isCompleted;
+  await todo.save();
+
+  // 2) Send the response with the updated todo
+  res.status(200).json({
+    message: "Todo toggled successfully",
+    todo, // Include the updated todo
   });
 });
 
