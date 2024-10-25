@@ -12,7 +12,7 @@ const TodoTable = ({ todos }: TodoTableProps) => {
           key={todo._id}
           title={todo.title}
           description={todo.description}
-          createdAt={todo.createdAt}
+          createdAt={todo.createdAt || new Date().toISOString()} // Fallback to current date if createdAt is undefined
         />
       ))}
     </div>
