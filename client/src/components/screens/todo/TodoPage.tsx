@@ -98,6 +98,35 @@ const TodoPage = () => {
     }
   };
 
+  //! Toggle todo
+  const toggleTodo = async (id: string) => {
+    try {
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_TODO_API_URL}/${id}`
+      );
+
+      const updatedTodo = response.data.todo;
+
+      setTodos((prevTodos) =>
+        prevTodos.map((todo) =>
+          todo._id === updatedTodo._id ? updatedTodo : todo
+        )
+      );
+
+      toast({
+        title: "Todo Updated 🎉",
+        description: "Todo has been updated successfully.",
+      });
+    } catch (error) {
+      setError("Error to toggle todo.");
+      toast({
+        title: "Error to toggle it 🚫",
+        description: "An error occurred while toggling the todo.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="flex flex-col items-center py-20 h-screen w-full px-10 bg-gray-50">
       <h1 className="text-4xl font-bold text-gray-800 mb-8">Todo List</h1>
@@ -117,7 +146,11 @@ const TodoPage = () => {
         <TodoFilter />
       </div>
       {/* Todo List */}
-      <TodoTable todos={todos} handleDeleteTodo={handleDeleteTodo} />
+      <TodoTable
+        todos={todos}
+        handleDeleteTodo={handleDeleteTodo}
+        toggleTodo={toggleTodo}
+      />
     </div>
   );
 };

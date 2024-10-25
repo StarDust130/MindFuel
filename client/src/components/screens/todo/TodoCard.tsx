@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { CheckSquare, Edit3, Trash2 } from "lucide-react";
+import { CheckSquare, Edit3, RotateCcw, Trash2 } from "lucide-react";
 
 interface TodoCardProps {
   title: string;
@@ -14,8 +14,8 @@ interface TodoCardProps {
   createdAt: string;
   onEdit?: () => void;
   handleDeleteTodo?: () => void;
-  onToggleComplete?: () => void;
   isCompleted?: boolean;
+  toggleTodo?: () => void;
 }
 
 const TodoCard = ({
@@ -24,7 +24,7 @@ const TodoCard = ({
   createdAt,
   onEdit,
   handleDeleteTodo,
-  onToggleComplete,
+  toggleTodo,
   isCompleted,
 }: TodoCardProps) => {
   const formattedDate = new Intl.DateTimeFormat("en-IN", {
@@ -36,15 +36,23 @@ const TodoCard = ({
     hour12: true,
   }).format(new Date(createdAt));
 
+  console.log("isCompleted", isCompleted);
+
   return (
     <Card className="border border-gray-200 shadow-lg hover:shadow-xl transition-shadow rounded-lg p-5 bg-white flex flex-col gap-4">
       <div className="flex items-start gap-4">
-        <CheckSquare
-          onClick={onToggleComplete}
-          className={`cursor-pointer transition duration-200 ease-in-out ${
-            isCompleted ? "text-green-500" : "text-gray-300"
-          }`}
-        />
+        {isCompleted ? (
+          <RotateCcw
+            onClick={toggleTodo}
+            className={`cursor-pointer transition duration-200 ease-in-out `}
+          />
+        ) : (
+          <CheckSquare
+            onClick={toggleTodo}
+            className={`cursor-pointer transition duration-200 ease-in-out `}
+          />
+        )}
+
         <div className="flex-grow">
           <CardHeader>
             <CardTitle

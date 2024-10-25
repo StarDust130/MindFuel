@@ -100,11 +100,13 @@ export const updateTodo = catchAsync(async (req, res, next) => {
 //! Toggle Todo 🐕‍🦺
 export const toggleTodo = catchAsync(async (req, res, next) => {
   // 1) Find the todo and toggle its isCompleted status
-  const todo = await User.findById(req.params.id);
+  const todo = await Todo.findById(req.params.id);
+
+  console.log("todo 🐼", todo);
 
   // If the todo does not exist, return an error
   if (!todo) {
-    return res.status(404).json({ message: "Todo not found" });
+    return res.status(404).json({ message: "Todo not found 🤩"  });
   }
 
   // Toggle the isCompleted status
@@ -117,4 +119,3 @@ export const toggleTodo = catchAsync(async (req, res, next) => {
     todo, // Include the updated todo
   });
 });
-

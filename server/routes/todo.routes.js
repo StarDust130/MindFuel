@@ -4,6 +4,7 @@ import {
   deleteTodo,
   getAllTodo,
   getTodoById,
+  toggleTodo,
   updateTodo,
 } from "../controllers/todo.controller.js";
 import { validateTodo } from "../middlewares/todo.middlewares.js";
@@ -19,5 +20,7 @@ router.post("/", validateTodo, createTodo); //! Create Todo 🐤
 router.delete("/:id", deleteTodo); //! delete 🫦
 
 router.patch("/:id", validateTodo, updateTodo); //! Update Todo ↕️
+
+router.put("/:id", toggleTodo);
 
 export default router;
