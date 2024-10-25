@@ -1,37 +1,24 @@
-// TodoInput.js
-"use client";
-
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import axios from "axios";
 
-const TodoInput = () => {
-  const [todo, setTodo] = useState("");
+interface TodoInputProps {
+  todo: { title: string; description: string };
+  setTodo: (todo: { title: string; description: string }) => void;
+  handleAddTodo: () => void;
+}
 
-  const handleAddTodo = async () => {
-    if (todo.trim() === "") return;
-
-    try {
-      const response = await axios.post( `${process.env.NEXT_PUBLIC_TODO_API_URL}`, {
-        title: todo,
-      });
-      if (response.status === 201) {
-        setTodo(""); // Clear input if successfully added
-      } else {
-        console.error("Failed to add todo");
-      }
-    } catch (error) {
-      console.error("Error adding todo:", error);
-    }
-  };
-
+const TodoInput = ({ todo, setTodo, handleAddTodo }: TodoInputProps) => {
   return (
     <>
       <Input
-        placeholder="Add Todo"
-        value={todo}
-        onChange={(e) => setTodo(e.target.value)}
+        placeholder="Add Title"
+        value={todo.title}
+        onChange={(e) => setTodo({ ...todo, title: e.target.value })}
+      />
+      <Input
+        placeholder="Add Description"
+        value={todo.description}
+        onChange={(e) => setTodo({ ...todo, description: e.target.value })}
       />
       <Button onClick={handleAddTodo} variant={"default"}>
         Add Todo
