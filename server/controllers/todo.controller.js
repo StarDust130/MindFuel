@@ -5,31 +5,48 @@ import { catchAsync } from "../utils/catchAsync.js";
 //! Get All Todo
 export const getAllTodo = catchAsync(async (req, res) => {
   // 1) Get query parameters
-  const { sort } = req.query;
+  const { sort, limit = 10, page = 1, search } = req.query;
 
   // 2) Prepare the sort options
-  let sortOptions = {};
+  const sortOptions = {
+    new: { createdAt: -1 },
+    old: { createdAt: 1 },
+    ascending: { title: 1 },
+    descending: { title: -1 },
+  };
 
-  if (sort === 'new') {
-    sortOptions.createdAt = -1;
-  } else if (sort === 'old') {
-    sortOptions.createdAt = 1;
-  } else if (sort === "ascending") {
-    sortOptions.title = 1;
-  } else if (sort === "descending") {
-    sortOptions.title = -1;
+  // 3) Prepare the filter options
+  const filterOptions = {};
+  if (search) {
+    filterOptions.$or = [
+      { title: { $regex: search, $options: 'i' } },
+      { description: { $regex: search, $options: 'i' } },
+    ];
   }
 
-  // 3) Get all todos with sorting
-  const todos = await Todo.find({}).sort(sortOptions);
+  // 4) Calculate pagination
+  const skip = (parseInt(page) - 1) * parseInt(limit);
 
-  // 4) Response send
+  // 5) Get todos with sorting, filtering, pagination, and case-insensitive collation
+  const todos = await Todo.find(filterOptions)
+    .sort(sortOptions[sort] || {})
+    .skip(skip)
+    .limit(parseInt(limit))
+    .collation({ locale: "en", strength: 2 });
+
+  // 6) Get total count for pagination
+  const totalCount = await Todo.countDocuments(filterOptions);
+
+  // 7) Response send
   res.status(200).json({
-    length: todos.length,
-    message: "All todos retrieved successfully 🥳",
+    totalCount,
+    currentPage: parseInt(page),
+    totalPages: Math.ceil(totalCount / parseInt(limit)),
+    message: "Todos retrieved successfully 🥳",
     todos,
   });
 });
+
 
 //! Create todo
 export const createTodo = catchAsync(async (req, res, next) => {

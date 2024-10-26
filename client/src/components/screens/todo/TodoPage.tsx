@@ -27,6 +27,7 @@ const TodoPage = () => {
   });
   const [todos, setTodos] = useState<Todos[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [sort, setSort] = useState<string>("");
   const { toast } = useToast();
 
   //! Fetch Todos on Component Mount Only 🧁
@@ -34,7 +35,7 @@ const TodoPage = () => {
     const fetchTodos = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_TODO_API_URL}`
+          `${process.env.NEXT_PUBLIC_TODO_API_URL}?sort=${sort}`
         );
         setTodos(response.data.todos);
       } catch (error) {
@@ -47,7 +48,7 @@ const TodoPage = () => {
     };
 
     fetchTodos();
-  }, []);
+  }, [sort]);
 
   //! Create Todo 🍰
   const handleAddTodo = async () => {
@@ -171,7 +172,6 @@ const TodoPage = () => {
       <h1 className="text-4xl font-bold text-gray-800 mb-8">Todo List</h1>
       {/* Display Error Message */}
       {error && <p className="text-red-500">{error}</p>}
-      present
       {/* Todo Input */}
       <div className="md:w-1/2 w-full mb-6">
         <TodoInput
@@ -182,7 +182,7 @@ const TodoPage = () => {
       </div>
       {/* Todo Filter */}
       <div className="w-full flex justify-end mb-4">
-        <TodoFilter />
+        <TodoFilter sort={sort} setSort={setSort} />
       </div>
       {/* Todo List */}
       <TodoTable
