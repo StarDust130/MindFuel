@@ -36,6 +36,8 @@ const TodoFilter = ({
             <SelectItem value="old">Oldest First</SelectItem>
             <SelectItem value="ascending">Todos: (A to Z)</SelectItem>
             <SelectItem value="descending">Todos: (Z to A)</SelectItem>
+            <SelectItem value="completed">Completed First</SelectItem>
+            <SelectItem value="notCompleted">Not Completed First</SelectItem>
           </SelectContent>
         </Select>
       </div>

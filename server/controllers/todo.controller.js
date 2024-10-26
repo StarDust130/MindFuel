@@ -4,40 +4,49 @@ import { catchAsync } from "../utils/catchAsync.js";
 
 //! Get All Todo
 export const getAllTodo = catchAsync(async (req, res) => {
-  // 1) Get query parameters
-  const { sort, limit = 10, page = 1, search } = req.query;
+  // 1) 🎣 Fishing for query params from the request
+  const { sort, limit = 10, page = 1, search, isCompleted } = req.query;
 
-  // 2) Prepare the sort options
+  // 2) 🔀 Setting up our sorting magic hat
   const sortOptions = {
-    new: { createdAt: -1 },
-    old: { createdAt: 1 },
-    ascending: { title: 1 },
-    descending: { title: -1 },
+    new: { createdAt: -1 }, // 🆕 Newest first
+    old: { createdAt: 1 }, // 👴 Oldest first
+    ascending: { title: 1 }, // 🔤 A to Z
+    descending: { title: -1 }, // 🔠 Z to A
+    completed: { isCompleted: -1, createdAt: -1 }, // ✅ Completed todos first, then by newest
+    notCompleted: { isCompleted: 1, createdAt: -1 }, // ❌ Not completed todos first, then by newest
   };
 
-  // 3) Prepare the filter options
+  // 3) 🕵️‍♀️ Detective work: setting up our search and filter clues
   const filterOptions = {};
   if (search) {
+    // 🔍 Looking for matching title or description
     filterOptions.$or = [
-      { title: { $regex: search, $options: 'i' } },
-      { description: { $regex: search, $options: 'i' } },
+      { title: { $regex: search, $options: "i" } },
+      { description: { $regex: search, $options: "i" } },
     ];
   }
+  if (isCompleted !== undefined) {
+    // ✅ or ❌ Checking if todo is done or not
+    filterOptions.isCompleted = isCompleted === "true";
+  }
 
-  // 4) Calculate pagination
+  // 4) 🦘 Calculating our skip-jump for pagination
   const skip = (parseInt(page) - 1) * parseInt(limit);
 
-  // 5) Get todos with sorting, filtering, pagination, and case-insensitive collation
+  // 5) 🎣 Reeling in our todos from the database ocean
   const todos = await Todo.find(filterOptions)
-    .sort(sortOptions[sort] || {})
+    .sort(
+      sort === "completed" || sort === "notCompleted" ? sortOptions[sort] : sortOptions[sort] || {}
+    )
     .skip(skip)
     .limit(parseInt(limit))
     .collation({ locale: "en", strength: 2 });
 
-  // 6) Get total count for pagination
+  // 6) 🧮 Counting all our todo fishes in the sea
   const totalCount = await Todo.countDocuments(filterOptions);
 
-  // 7) Response send
+  // 7) 📦 Packing up our response in a nice box with a bow
   res.status(200).json({
     totalCount,
     currentPage: parseInt(page),
@@ -46,7 +55,6 @@ export const getAllTodo = catchAsync(async (req, res) => {
     todos,
   });
 });
-
 
 //! Create todo
 export const createTodo = catchAsync(async (req, res, next) => {
@@ -130,7 +138,6 @@ export const updateTodo = catchAsync(async (req, res, next) => {
   });
 });
 
-
 //! Toggle Todo 🐕‍🦺
 export const toggleTodo = catchAsync(async (req, res, next) => {
   // 1) Find the todo and toggle its isCompleted status
@@ -140,7 +147,7 @@ export const toggleTodo = catchAsync(async (req, res, next) => {
 
   // If the todo does not exist, return an error
   if (!todo) {
-    return res.status(404).json({ message: "Todo not found 🤩"  });
+    return res.status(404).json({ message: "Todo not found 🤩" });
   }
 
   // Toggle the isCompleted status

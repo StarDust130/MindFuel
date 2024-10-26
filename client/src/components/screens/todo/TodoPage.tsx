@@ -48,7 +48,7 @@ const TodoPage = () => {
     };
 
     fetchTodos();
-  }, [sort]);
+  }, [sort, todos.length]); // Fetch todos when sort or todos change
 
   //! Create Todo 🍰
   const handleAddTodo = async () => {
