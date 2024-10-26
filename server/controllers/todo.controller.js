@@ -4,13 +4,29 @@ import { catchAsync } from "../utils/catchAsync.js";
 
 //! Get All Todo
 export const getAllTodo = catchAsync(async (req, res) => {
-  // 1) Get all todo
-  const todos = await Todo.find({});
+  // 1) Get query parameters
+  const { sort } = req.query;
 
-  // 2) Response send
+  // 2) Prepare the sort options
+  let sortOptions = {};
+
+  if (sort === 'new') {
+    sortOptions.createdAt = -1;
+  } else if (sort === 'old') {
+    sortOptions.createdAt = 1;
+  } else if (sort === "ascending") {
+    sortOptions.title = 1;
+  } else if (sort === "descending") {
+    sortOptions.title = -1;
+  }
+
+  // 3) Get all todos with sorting
+  const todos = await Todo.find({}).sort(sortOptions);
+
+  // 4) Response send
   res.status(200).json({
     length: todos.length,
-    message: "All todo get Sucessfully 🥳",
+    message: "All todos retrieved successfully 🥳",
     todos,
   });
 });
